@@ -83,6 +83,7 @@ and conduct sex assignment. Molecular Ecology Resources.
 
 Other unmatched report: 
 \code{\link{gl.allele.freq}()},
+\code{\link{gl.report.allelerich}()},
 \code{\link{gl.report.basics}()},
 \code{\link{gl.report.diversity}()},
 \code{\link{gl.report.heterozygosity}()},
