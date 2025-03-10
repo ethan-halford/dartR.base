@@ -346,6 +346,7 @@ distance from a small number of individuals. Genetics, 89(3), 583-590.
 
 Other unmatched report: 
 \code{\link{gl.allele.freq}()},
+\code{\link{gl.report.allelerich}()},
 \code{\link{gl.report.basics}()},
 \code{\link{gl.report.diversity}()},
 \code{\link{gl.report.excess.het}()},
