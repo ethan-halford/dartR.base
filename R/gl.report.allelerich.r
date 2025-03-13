@@ -19,14 +19,11 @@
 #' @param nboots Number of bootstrap replicates to obtain confidence intervals
 #'   [default 0].
 #' @param boot.method Character specifying the bootstrap strategy: "ind" to
-#'   resample individuals or "loc" to resample loci [default "ind"].
+#'   resample individuals or "loc" to resample loci [default "loc"].
 #' @param conf Numeric specifying the confidence level for the interval 
 #'   estimation [default 0.95].
 #' @param CI.type Character specifying the type of nonparametric confidence 
 #'   interval: "norm", "basic", "perc", or "bca" [default "bca"].
-#' @param ncpus Number of processes to be used in parallel operation. If
-#'   \code{ncpus > 1}, parallel execution is activated. See Details for 
-#'   information on different platforms [default 1].
 #' @param plot.display Logical indicating if a plot should be produced 
 #'   [default TRUE].
 #' @param plot.theme A \pkg{ggplot2} theme to style the plots 
@@ -50,8 +47,7 @@
 #' \strong{Allelic Richness via Rarefaction:}
 #' 
 #' This function applies a rarefaction technique to standardize allelic 
-#' richness, ensuring that each population is evaluated at the same 
-#' sample size. This approach mitigates biases that arise from differences 
+#' richness. This approach mitigates biases that arise from differences 
 #' in sampling depth and highlights the presence of less frequent alleles, 
 #' which can be disproportionately important for long-term evolutionary 
 #' potential and conservation. Rarefaction essentially calculates the 
@@ -75,24 +71,24 @@
 #'  
 #'   \strong{1. Confidence Intervals ("CI"):}
 #'   
-#'  - Usage: Often used to convey the precision of an estimate.
+#'- Usage: Often used to convey the precision of an estimate.
 #'  
-#'  - Advantage: Confidence intervals give a range in which the true parameter 
+#'- Advantage: Confidence intervals give a range in which the true parameter 
 #'  (like a population mean) is likely to fall, given the data and a specified 
 #'  probability (like 95\%).
 #'  
-#'  - In Context: For genetic statistics, if you're estimating a parameter,
-#'   a 95\% CI gives you a range in which you're 95\% confident the true parameter
+#'- In Context: For genetic statistics, if you're estimating a parameter,
+#' a 95\% CI gives you a range in which you're 95\% confident the true parameter
 #'    lies.
 #'  
 #'   \strong{2. Standard Deviation ("SD"):}
 #'   
-#'  - Usage: Describes the amount of variation from the average in a set of data.
+#'- Usage: Describes the amount of variation from the average in a set of data.
 #'  
-#'  - Advantage: Allows for an understanding of the spread of individual data
+#'- Advantage: Allows for an understanding of the spread of individual data
 #'   points around the mean.
 #'   
-#'  - In Context: If you're looking at the distribution of a quantitative trait 
+#'- In Context: If you're looking at the distribution of a quantitative trait 
 #'  (like height) in a population with a particular genotype, the SD can 
 #'  describe how much individual heights vary around the average height.
 #'  
@@ -191,6 +187,15 @@
 #' Increasing the number of bootstrap replicates, using a different type of
 #' bootstrap confidence interval or removing or transforming the outliers or
 #'  extreme values.
+#'  
+#' \strong{Confidence intervals not encopassing the mean}
+#'  
+#' When using bootstrap methods to estimate confidence intervals for rarefied
+#'  metrics, the resampling distribution can be skewed—especially if the sample
+#'   size is small. Skewness means the bootstrap‐estimated distribution may 
+#'   shift away from the sample mean, so percentile (or BCa) confidence 
+#'   intervals may legitimately exclude that mean. This does not necessarily 
+#'   indicate an error but can reflect genuine asymmetry in the data.
 #' 
 #' \strong{Parallelisation:}
 #' 
@@ -233,10 +238,9 @@
 
 gl.report.allelerich <- function(x,
                                  nboots = 0,
-                                 boot.method = "ind",
+                                 boot.method = "loc",
                                  conf = 0.95,
                                  CI.type = "bca",
-                                 ncpus = 1,
                                  plot.display = TRUE,
                                  plot.theme = theme_dartR(),
                                  plot.colors.pop = gl.colors("dis"),
@@ -245,14 +249,14 @@ gl.report.allelerich <- function(x,
                                  error.bar = "SD",
                                  verbose = NULL) {
   
-  # setting parallel
-  if (grepl("unix", .Platform$OS.type, ignore.case = TRUE)) {
-    parallel <- "multicore"
-  }
-  ## if windows
-  if (!grepl("unix", .Platform$OS.type, ignore.case = TRUE)) {
-    parallel <- "snow"
-  }
+  # # setting parallel
+  # if (grepl("unix", .Platform$OS.type, ignore.case = TRUE)) {
+  #   parallel <- "multicore"
+  # }
+  # ## if windows
+  # if (!grepl("unix", .Platform$OS.type, ignore.case = TRUE)) {
+  #   parallel <- "snow"
+  # }
   
   # SET VERBOSITY
   verbose <- gl.check.verbosity(verbose)
@@ -302,6 +306,10 @@ gl.report.allelerich <- function(x,
     stop()
   }
   
+  if( nboots > 0){
+  error.bar <- "CI"
+  }
+  
   #define some global variables...
   site <- genotype <- ref_allele <- alt_allele <- raw_count <-  
     sum_site_richness <- sum_richness <- popsize <- mean_richness <- 
@@ -319,20 +327,15 @@ gl.report.allelerich <- function(x,
   
   # Split the genlight object into a list of populations
   pop_list <- seppop(x)
-  
-  # Process each population:
-  # - Convert the genlight object to a matrix
-  # - Reshape it into long format using melt()
-  # - Calculate allele counts for each site based on genotype (0, 1, or 2)
+
   allele_site_summary <- lapply(names(pop_list), function(pop_name) {
     pop_data <- pop_list[[pop_name]]
-    
     # Convert genlight object to a matrix and reshape to long format
     m <- as.matrix(pop_data)
     allele_df <-reshape2::melt(m, varnames = c("ind", "site"), value.name = "genotype") %>%
       mutate(pop = pop_name)
     
-    # Summarise counts per genotype for each site and compute allele counts:
+    # Summarise counts per genotype for each SNP and compute allele counts:
     # - Genotype 0: 2 copies of the reference allele, 0 copies of the alternate allele.
     # - Genotype 1: 1 copy each of reference and alternate.
     # - Genotype 2: 0 copies of the reference allele, 2 copies of the alternate allele.
@@ -370,8 +373,9 @@ gl.report.allelerich <- function(x,
   # Combine data from all populations into one data frame
   allele_count_all <- bind_rows(allele_site_summary)
   
-  # Determine the overall minimum sample size (i.e., the smallest total number of allele copies)
-  # across all sites and populations. This minimum is used as the subsample size (n) in the rarefaction formula.
+  # Determine the overall minimum sample size (i.e., the smallest total number
+  # of allele copies) across all sites and populations. This minimum is used as 
+  # the subsample size (n) in the rarefaction formula.
   min_pop <- allele_count_all %>%
     group_by(pop) %>%
     summarise(min_sample = min(raw_count), .groups = "drop") %>%
@@ -400,28 +404,24 @@ gl.report.allelerich <- function(x,
   #
   #   r(n) = r_ref + r_alt
   #
-  # To obtain the corrected allelic richness (which is zero if the locus is fixed),
-  # we subtract one:
-  #
-  #   corrected_richness = r(n) - 1
-  #
-  # These steps have been integrated into the code below.
-  # ---------------------------------------------------------------------------
+
   allele_richness <- allele_count_all %>%
     mutate(
-      r_ref = 1 - choose(raw_count - all_ref_allele, min_pop) / choose(raw_count, min_pop),
-      r_alt = 1 - choose(raw_count - all_alt_allele, min_pop) / choose(raw_count, min_pop),
+      r_ref = 1 - choose(raw_count - all_ref_allele, min_pop) / 
+        choose(raw_count, min_pop),
+      r_alt = 1 - choose(raw_count - all_alt_allele, min_pop) / 
+        choose(raw_count, min_pop),
       r_total = r_ref + r_alt,
       corrected_richness = r_total
     )
   
-  # The following steps format the output:
-  # 1. Pivot the data to obtain corrected richness per site in wide format by population.
+  # Pivot the data to obtain corrected richness per site in wide format by
+  # population.
   richness_per_site <- allele_richness %>%
     select(pop, site, corrected_richness) %>%
     tidyr::pivot_wider(names_from = pop, values_from = corrected_richness)
   
-  # 2. Summarise the corrected richness per population (averaging over sites)
+  # Summarise the corrected richness per population (averaging over sites)
   richness_summary <- allele_richness %>%
     group_by(pop) %>%
     summarise(
@@ -435,7 +435,8 @@ gl.report.allelerich <- function(x,
       by = "pop"
     )
   
-  # 3. Create wide-format tables for raw allele counts per site for reference and alternate alleles
+  # Create wide-format tables for raw allele counts per site for reference and 
+  # alternate alleles
   raw_count_ref <- allele_richness %>%
     select(pop, site, all_ref_allele) %>%
     tidyr::pivot_wider(names_from = pop, values_from = all_ref_allele)
@@ -445,8 +446,10 @@ gl.report.allelerich <- function(x,
     tidyr::pivot_wider(names_from = pop, values_from = all_alt_allele)
   
   # The final output is a list containing:
-  # - "Corrected Richness per site": Allelic richness per site computed by rarefaction.
-  # - "Corrected Richness per population": Summaries of corrected richness averaged over sites.
+  # - "Corrected Richness per site": Allelic richness per site computed by 
+  # rarefaction.
+  # - "Corrected Richness per population": Summaries of corrected richness 
+  # averaged over sites.
   # - "Raw reference allele count": The original count of the reference allele.
   # - "Raw alternate allele count": The original count of the alternate allele.
   result <- list(
@@ -456,7 +459,8 @@ gl.report.allelerich <- function(x,
     "Raw alternate allele count" = raw_count_alt
   )
   
-  # Round numeric columns in each data frame of the result list to 4 decimal places
+  # Round numeric columns in each data frame of the result list to 4 decimal
+  # places
   result <- lapply(result, function(df) {
     df <- df %>% mutate(across(where(is.numeric), ~ round(., digits = 6)))
     as.data.frame(df)
@@ -468,7 +472,6 @@ gl.report.allelerich <- function(x,
     # Split the genlight object into a list of populations
     sgl <- seppop(x)
     pop_boot <- lapply(sgl, function(y) {
-      
       df <- as.matrix(y)
       
       if(boot.method == "loc"){
@@ -480,8 +483,9 @@ gl.report.allelerich <- function(x,
         statistic = all.rich,
         boot_method = boot.method,
         R = nboots,
-        parallel = parallel,
-        ncpus = ncpus
+        parallel = "no"
+        # ,
+        # ncpus = ncpus
       )
       return(res_boots)
     })
@@ -500,7 +504,9 @@ gl.report.allelerich <- function(x,
           boot.out = pop_boot[[pop_n]],
           conf = conf,
           type = CI.type,
-          index = stat_n
+          index = stat_n,
+          t0 =  pop_boot[[pop_n]]$t0,
+          t = pop_boot[[pop_n]]$t[, stat_n]
         )
         
         res_CI[[pop_n]][stat_n,] <-
@@ -585,7 +591,7 @@ gl.report.allelerich <- function(x,
                     legend.position = "none"
                   ) +
     scale_fill_manual(values = colors_pops) +
-    coord_cartesian(ylim = c(1,max_val)) + 
+    coord_cartesian(ylim = c(0.8,max_val)) + 
     labs(fill = "Population") +
     ggtitle("Mean allelic richness by Population")
 

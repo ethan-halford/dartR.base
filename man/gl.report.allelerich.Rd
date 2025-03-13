@@ -7,10 +7,9 @@
 gl.report.allelerich(
   x,
   nboots = 0,
-  boot.method = "ind",
+  boot.method = "loc",
   conf = 0.95,
   CI.type = "bca",
-  ncpus = 1,
   plot.display = TRUE,
   plot.theme = theme_dartR(),
   plot.colors.pop = gl.colors("dis"),
@@ -27,17 +26,13 @@ gl.report.allelerich(
 [default 0].}
 
 \item{boot.method}{Character specifying the bootstrap strategy: "ind" to
-resample individuals or "loc" to resample loci [default "ind"].}
+resample individuals or "loc" to resample loci [default "loc"].}
 
 \item{conf}{Numeric specifying the confidence level for the interval 
 estimation [default 0.95].}
 
 \item{CI.type}{Character specifying the type of nonparametric confidence 
 interval: "norm", "basic", "perc", or "bca" [default "bca"].}
-
-\item{ncpus}{Number of processes to be used in parallel operation. If
-\code{ncpus > 1}, parallel execution is activated. See Details for 
-information on different platforms [default 1].}
 
 \item{plot.display}{Logical indicating if a plot should be produced 
 [default TRUE].}
@@ -89,8 +84,7 @@ confidence intervals, standard error, or standard deviation.
 \strong{Allelic Richness via Rarefaction:}
 
 This function applies a rarefaction technique to standardize allelic 
-richness, ensuring that each population is evaluated at the same 
-sample size. This approach mitigates biases that arise from differences 
+richness. This approach mitigates biases that arise from differences 
 in sampling depth and highlights the presence of less frequent alleles, 
 which can be disproportionately important for long-term evolutionary 
 potential and conservation. Rarefaction essentially calculates the 
@@ -114,24 +108,24 @@ at greater risk of losing rare allelic variants.
  
   \strong{1. Confidence Intervals ("CI"):}
   
- - Usage: Often used to convey the precision of an estimate.
+- Usage: Often used to convey the precision of an estimate.
  
- - Advantage: Confidence intervals give a range in which the true parameter 
+- Advantage: Confidence intervals give a range in which the true parameter 
  (like a population mean) is likely to fall, given the data and a specified 
  probability (like 95\%).
  
- - In Context: For genetic statistics, if you're estimating a parameter,
-  a 95\% CI gives you a range in which you're 95\% confident the true parameter
+- In Context: For genetic statistics, if you're estimating a parameter,
+a 95\% CI gives you a range in which you're 95\% confident the true parameter
    lies.
  
   \strong{2. Standard Deviation ("SD"):}
   
- - Usage: Describes the amount of variation from the average in a set of data.
+- Usage: Describes the amount of variation from the average in a set of data.
  
- - Advantage: Allows for an understanding of the spread of individual data
+- Advantage: Allows for an understanding of the spread of individual data
   points around the mean.
   
- - In Context: If you're looking at the distribution of a quantitative trait 
+- In Context: If you're looking at the distribution of a quantitative trait 
  (like height) in a population with a particular genotype, the SD can 
  describe how much individual heights vary around the average height.
  
@@ -230,6 +224,15 @@ The studentized bootstrap interval ("stud") was not included in the CI types
 Increasing the number of bootstrap replicates, using a different type of
 bootstrap confidence interval or removing or transforming the outliers or
  extreme values.
+ 
+\strong{Confidence intervals not encopassing the mean}
+ 
+When using bootstrap methods to estimate confidence intervals for rarefied
+ metrics, the resampling distribution can be skewed—especially if the sample
+  size is small. Skewness means the bootstrap‐estimated distribution may 
+  shift away from the sample mean, so percentile (or BCa) confidence 
+  intervals may legitimately exclude that mean. This does not necessarily 
+  indicate an error but can reflect genuine asymmetry in the data.
 
 \strong{Parallelisation:}
 
