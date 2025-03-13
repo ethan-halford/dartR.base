@@ -196,14 +196,6 @@
 #'   shift away from the sample mean, so percentile (or BCa) confidence 
 #'   intervals may legitimately exclude that mean. This does not necessarily 
 #'   indicate an error but can reflect genuine asymmetry in the data.
-#' 
-#' \strong{Parallelisation:}
-#' 
-#' Setting \code{ncpus} greater than 1 enables parallel execution. Windows 
-#' systems use a "socket" approach, while POSIX systems (Mac, Linux, Unix, 
-#' and BSD) use "forking." Parallelisation may only improve performance for 
-#' higher \code{nboots} (e.g., > 1000–2000), particularly on Windows, due 
-#' to the overhead of starting and stopping additional R sessions on each core.
 #'
 #' @return
 #' A list of data frames containing:
