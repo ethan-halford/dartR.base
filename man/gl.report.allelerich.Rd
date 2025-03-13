@@ -178,10 +178,10 @@ method that samples with replacement the data (i.e. loci) and calculates the
    \item Adjusted bootstrap percentile interval ("bca").
    }
 
-The studentized bootstrap interval ("stud") was not included in the CI types
+The studentised bootstrap interval ("stud") was not included in the CI types
  because it is computationally intensive, it may produce estimates outside
  the range of plausible values and it has been found to be erratic in
- practice, see for example the "Studentized (t) Intervals" section in:
+ practice, see for example the "Studentised (t) Intervals" section in:
 
    \url{https://www.r-bloggers.com/2019/09/understanding-bootstrap-confidence-interval-output-from-the-r-boot-package/}
 
@@ -225,7 +225,7 @@ Increasing the number of bootstrap replicates, using a different type of
 bootstrap confidence interval or removing or transforming the outliers or
  extreme values.
  
-\strong{Confidence intervals not encopassing the mean}
+\strong{Confidence intervals that do not encompass the mean}
  
 When using bootstrap methods to estimate confidence intervals for rarefied
  metrics, the resampling distribution can be skewed—especially if the sample
