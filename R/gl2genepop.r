@@ -81,6 +81,9 @@ gl2genepop <- function (x,
     pop(x) <- rep("Pop1", nInd(x))
   }
   
+  # changing spaces by underscors in pop names
+  popNames(x) <- gsub(" ","_",popNames(x))
+  
   # DO THE JOB
   #ordering populations
   # filtering all loci with all NAs to avoid crashing the function
