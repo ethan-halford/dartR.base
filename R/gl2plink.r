@@ -125,7 +125,8 @@ gl2plink <- function(x,
 dataset as dummy position.\n"))
     }
     
-    snp_temp <- as.data.frame(cbind(as.character(x$chromosome),x$position))
+    snp_temp <- as.data.frame(cbind(as.character(x$chromosome),
+                                    as.numeric(x$position)))
     colnames(snp_temp) <- c("chrom","snp_pos")
     
 

@@ -324,8 +324,8 @@ gl.report.allelerich <- function(x,
     pop_data <- pop_list[[pop_name]]
     # Convert genlight object to a matrix and reshape to long format
     m <- as.matrix(pop_data)
-    allele_df <-reshape2::melt(m, varnames = c("ind", "site"), value.name = "genotype") %>%
-      mutate(pop = pop_name)
+    allele_df <- reshape2::melt(m, varnames = c("ind", "site"), value.name = "genotype") %>%
+      dplyr::mutate(pop = pop_name)
     
     # Summarise counts per genotype for each SNP and compute allele counts:
     # - Genotype 0: 2 copies of the reference allele, 0 copies of the alternate allele.
@@ -333,16 +333,16 @@ gl.report.allelerich <- function(x,
     # - Genotype 2: 0 copies of the reference allele, 2 copies of the alternate allele.
     allele_summary <- allele_df %>%
       group_by(site, genotype, pop) %>%
-      tally(name = "n") %>%
-      na.omit() %>%
-      ungroup() %>%
-      mutate(
-        ref_allele = case_when(
+      dplyr::tally(name = "n") %>%
+      stats::na.omit() %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(
+        ref_allele = dplyr::case_when(
           genotype == 0 ~ n * 2,
           genotype == 1 ~ n,
           genotype == 2 ~ 0
         ),
-        alt_allele = case_when(
+        alt_allele = dplyr::case_when(
           genotype == 0 ~ 0,
           genotype == 1 ~ n,
           genotype == 2 ~ n * 2
@@ -351,7 +351,7 @@ gl.report.allelerich <- function(x,
     
     # Summarise total allele counts per site for the population
     site_summary <- allele_summary %>%
-      group_by(site, pop) %>%
+      dplyr::group_by(site, pop) %>%
       summarise(
         all_ref_allele = sum(ref_allele,na.rm = TRUE),
         all_alt_allele = sum(alt_allele,na.rm = TRUE),
@@ -363,16 +363,16 @@ gl.report.allelerich <- function(x,
   })
   
   # Combine data from all populations into one data frame
-  allele_count_all <- bind_rows(allele_site_summary)
+  allele_count_all <- dplyr::bind_rows(allele_site_summary)
   
   # Determine the overall minimum sample size (i.e., the smallest total number
   # of allele copies) across all sites and populations. This minimum is used as 
   # the subsample size (n) in the rarefaction formula.
   min_pop <- allele_count_all %>%
-    group_by(pop) %>%
+    dplyr::group_by(pop) %>%
     summarise(min_sample = min(raw_count), .groups = "drop") %>%
     summarise(overall_min = min(min_sample)) %>%
-    pull(overall_min)
+    dplyr::pull(overall_min)
   
   # ---------------------------------------------------------------------------
   # Integration of Rarefaction Equations:
@@ -398,7 +398,7 @@ gl.report.allelerich <- function(x,
   #
 
   allele_richness <- allele_count_all %>%
-    mutate(
+    dplyr::mutate(
       r_ref = 1 - choose(raw_count - all_ref_allele, min_pop) / 
         choose(raw_count, min_pop),
       r_alt = 1 - choose(raw_count - all_alt_allele, min_pop) / 
@@ -410,19 +410,19 @@ gl.report.allelerich <- function(x,
   # Pivot the data to obtain corrected richness per site in wide format by
   # population.
   richness_per_site <- allele_richness %>%
-    select(pop, site, corrected_richness) %>%
+    dplyr::select(pop, site, corrected_richness) %>%
     tidyr::pivot_wider(names_from = pop, values_from = corrected_richness)
   
   # Summarise the corrected richness per population (averaging over sites)
   richness_summary <- allele_richness %>%
-    group_by(pop) %>%
+    dplyr::group_by(pop) %>%
     summarise(
       sum_corrected_richness = sum(corrected_richness, na.rm = TRUE),
       mean_corrected_richness = mean(corrected_richness, na.rm = TRUE),
       .groups = "drop"
     ) %>%
-    left_join(
-      tibble(pop = names(pop_list),
+    dplyr::left_join(
+      tibble::tibble(pop = names(pop_list),
              popsize = sapply(pop_list, nInd)),
       by = "pop"
     )
@@ -430,11 +430,11 @@ gl.report.allelerich <- function(x,
   # Create wide-format tables for raw allele counts per site for reference and 
   # alternate alleles
   raw_count_ref <- allele_richness %>%
-    select(pop, site, all_ref_allele) %>%
+    dplyr::select(pop, site, all_ref_allele) %>%
     tidyr::pivot_wider(names_from = pop, values_from = all_ref_allele)
   
   raw_count_alt <- allele_richness %>%
-    select(pop, site, all_alt_allele) %>%
+    dplyr::select(pop, site, all_alt_allele) %>%
     tidyr::pivot_wider(names_from = pop, values_from = all_alt_allele)
   
   # The final output is a list containing:
@@ -454,7 +454,7 @@ gl.report.allelerich <- function(x,
   # Round numeric columns in each data frame of the result list to 4 decimal
   # places
   result <- lapply(result, function(df) {
-    df <- df %>% mutate(across(where(is.numeric), ~ round(., digits = 6)))
+    df <- df %>% dplyr::mutate(across(where(is.numeric), ~ round(., digits = 6)))
     as.data.frame(df)
   })
   
@@ -476,8 +476,6 @@ gl.report.allelerich <- function(x,
         boot_method = boot.method,
         R = nboots,
         parallel = "no"
-        # ,
-        # ncpus = ncpus
       )
       return(res_boots)
     })
