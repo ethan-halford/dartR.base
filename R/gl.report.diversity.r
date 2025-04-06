@@ -136,6 +136,8 @@ gl.report.diversity <- function(x,
     # CHECK DATATYPE
     datatype <- utils.check.datatype(x, verbose = verbose)
     
+    x <- gl.filter.allna(x,verbose = verbose)
+    
     # DO THE JOB
     
     if (is.null(pop(x))) {
