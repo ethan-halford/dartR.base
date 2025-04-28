@@ -18,7 +18,8 @@
 #' employ in calculating genetic distance between individuals [default "F81"].
 #' @param by.pop If TRUE, the distance matrix is based on comparing
 #' populations; if FALSE, on individuals [default TRUE].
-#' @param pairwise.missing How to handle missing sequences [default TRUE].
+#' @param pairwise.missing Whether to delete the sites with missing data in a 
+#' pairwise way [default TRUE].
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log; 3, progress and results summary; 5, full report
 #' [default 2, unless specified using gl.set.verbosity].
