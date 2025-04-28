@@ -23,7 +23,8 @@ employ in calculating genetic distance between individuals [default "F81"].}
 \item{min.tag.len}{Minimum tag length of sequence tags to be used in the
 analysis [default NULL].}
 
-\item{pairwise.missing}{How to handle missing sequences [default TRUE].}
+\item{pairwise.missing}{Whether to delete the sites with missing data in a 
+pairwise way [default TRUE].}
 
 \item{by.pop}{If TRUE, the distance matrix is based on comparing
 populations; if FALSE, on individuals [default TRUE].}
