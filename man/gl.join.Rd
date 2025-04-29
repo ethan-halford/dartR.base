@@ -4,15 +4,17 @@
 \alias{gl.join}
 \title{Combines two dartR genlight objects}
 \usage{
-gl.join(x1, x2, method = "sidebyside", verbose = NULL)
+gl.join(x1, x2, method = "join.by.loc", verbose = NULL)
 }
 \arguments{
 \item{x1}{Name of the first genlight object [required].}
 
 \item{x2}{Name of the first genlight object [required].}
 
-\item{method}{If method='sidebyside' then combine the two by bringing the loci together against the same set of individuals;
-If method='end2end' then combine the two by bringing two sets of individuals together against the same set of loci [default 'sidebyside']}
+\item{method}{If method='join.by.ind' then combine the two by bringing the
+loci together against the same set of individuals; If method='join.by.loc' then
+combine the two by bringing two sets of individuals together against the
+same set of loci [default 'join.by.loc']}
 
 \item{verbose}{Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 progress log; 3, progress and results summary; 5, full report
@@ -26,36 +28,40 @@ This function combines two genlight objects and their associated metadata.
 The history associated with the two genlight objects is cleared from the new
 genlight object. The individuals/samples must be the same in each genlight
 object.
+
 The function is typically used to combine datasets from the same service
 where the files have been split because of size limitations. The data is read
 in from multiple csv files, then the resultant genlight objects are combined.
+
 This function works with both SNP and Tag P/A data.
 }
 \details{
-This script joins two genlight objects together along with the associated metadata. if method='sidebyside' (the default), the individuals 
-in the two genlight objects must be the same and in the same order. The loci are combined.
+This script joins two genlight objects together along with the associated
+metadata. if method='join.by.ind', the individuals in the two
+genlight objects must be the same and in the same order. The loci are
+combined.
 
-If method='end2end', the loci in the two genlight objects must be the same and in the same order. The data for the two sets of individuals
-are combined. Note that if two individuals have the same names, they will be made unique.#'
+If method='join.by.loc' (the default), the loci in the two genlight objects 
+must be the same and in the same order. The data for the two sets of 
+individuals are combined. Note that if two individuals have the same names, 
+they will be made unique.
 }
 \examples{
-x1 <- testset.gl[,1:100]
-x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
-nLoc(x1)
-x2 <- testset.gl[,101:150]
-x2@other$loc.metrics <-  testset.gl@other$loc.metrics[101:150,]
-nLoc(x2)
-gl <- gl.join(x1, x2, verbose=2)
-nLoc(gl)
-
-x1 <- testset.gl[,1:100]
-x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
-nLoc(x1)
-x2 <- testset.gl[,1:100]
-x2@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
-nLoc(x2)
-gl <- gl.join(x1, x2, method="end2end", verbose=2)
+# Joining by loci in common, both datasets have the same loci in the same order
+x1 <- testset.gl[1:10, ]
+nInd(x1)
+x2 <- testset.gl[11:20, ]
+nInd(x2)
+gl <- gl.join(x1, x2, method = "join.by.loc", verbose = 2)
 nInd(gl)
+# Joining by individuals in common, both datasets have the same individuals
+# in the same order
+x1 <- testset.gl[, 1:100]
+nLoc(x1)
+x2 <- testset.gl[, 101:200]
+nLoc(x2)
+gl <- gl.join(x1, x2, method = "join.by.ind", verbose = 2)
+nLoc(gl)
 
 }
 \seealso{
