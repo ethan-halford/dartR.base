@@ -148,10 +148,10 @@ gl.join <- function(x1,
   if (!(method %in% c('join.by.ind', 'join.by.loc'))) {
     cat(
       warn(
-        "  Warning: parameter by must be either 'join.by.ind' or 'join.by.loc', set to default 'join.by.ind'\n"
+        "  Warning: parameter by must be either 'join.by.ind' or 'join.by.loc', set to default 'join.by.loc'\n"
       )
     )
-    method <- "join.by.ind"
+    method <- "join.by.loc"
   }
   
   if (method == 'join.by.ind') {
@@ -243,7 +243,8 @@ gl.join <- function(x1,
     if (!is.null(x1@other$loc.metrics) &
         !is.null(x2@other$loc.metrics)) {
       x@other$loc.metrics <-
-        rbind(x1@other$loc.metrics, x2@other$loc.metrics)
+        # rbind(x1@other$loc.metrics, x2@other$loc.metrics)
+      dplyr::bind_rows(x1@other$loc.metrics, x2@other$loc.metrics)
     } else {
       cat(warn("  Warning: Input genlight objects lacks locus metrics\n"))
     }
