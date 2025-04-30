@@ -3,53 +3,8 @@ all.rich <- function(df,
                     indices,
                     boot_method = "loc") {
 
-  # allelicRichness <- function(x){
-  #   # reshape matrix into long format
-  #   long_data <- melt(x, varnames = c("ind", "site"), value.name = "genotype")
-  # 
-  #   # Tally and compute reference/alternate allele counts
-  #   allele_counts <- long_data %>%
-  #     group_by(site, genotype) %>%
-  #     tally(name = "n") %>%
-  #     na.omit() %>%
-  #     mutate(
-  #       ref_allele = case_when(
-  #         genotype == 0 ~ n * 2,
-  #         genotype == 1 ~ n,
-  #         TRUE          ~ 0
-  #       ),
-  #       alt_allele = case_when(
-  #         genotype == 2 ~ n * 2,
-  #         genotype == 1 ~ n,
-  #         TRUE          ~ 0
-  #       )
-  #     ) %>%
-  #     group_by(site) %>%
-  #     summarise(
-  #       ref_total  = sum(ref_allele),
-  #       alt_total  = sum(alt_allele),
-  #       raw_count  = sum(ref_allele + alt_allele),
-  #       .groups    = "drop"
-  #     )
-  # 
-  #   # Rarefaction calculation
-  #   min_sample_size <- min(allele_counts$raw_count, na.rm = TRUE)
-  # 
-  #   # Compute mean corrected richness across sites
-  #   allele_counts_fin <- allele_counts %>%
-  #     mutate(
-  #       r_ref = 1 - choose(raw_count - ref_total, min_sample_size) / 
-  #         choose(raw_count, min_sample_size),
-  #       r_alt = 1 - choose(raw_count - alt_total, min_sample_size) / 
-  #         choose(raw_count, min_sample_size)
-  #     ) %>%
-  #     summarise(mean_richness = mean(r_ref + r_alt, na.rm = TRUE)) %>%
-  #     pull(mean_richness) %>%
-  #     round(6)
-  # 
-  #   return(allele_counts_fin)
-  # }
-
+  allelicRichness <- function(){}  #to hack package checking...
+  
   Rcpp::cppFunction(
     '
 double allelicRichness(NumericMatrix x) {
