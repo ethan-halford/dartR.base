@@ -258,7 +258,7 @@ Other unmatched report:
 \code{\link{gl.report.polyploid_heterozygosity}()}
 }
 \author{
-Ching Ching Lau \email{(Post to 
-\url{https://groups.google.com/d/forum/dartr})}
+Author(s): Ching Ching Lau -- Post to
+\url{https://groups.google.com/d/forum/dartr}
 }
 \concept{unmatched report}

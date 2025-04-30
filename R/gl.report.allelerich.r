@@ -212,9 +212,8 @@
 #' [\emph{Argania spinosa} (L.) Skeels] endemic to Morocco. 
 #' \emph{Theoretical and Applied Genetics}, 92, 832–839.
 #'
-#' @author 
-#' Ching Ching Lau \email{(Post to 
-#' \url{https://groups.google.com/d/forum/dartr})}
+#' @author Author(s): Ching Ching Lau -- Post to
+#' \url{https://groups.google.com/d/forum/dartr}
 #'
 #' @export
 #'
@@ -249,7 +248,9 @@ gl.report.allelerich <- function(x,
   # if (!grepl("unix", .Platform$OS.type, ignore.case = TRUE)) {
   #   parallel <- "snow"
   # }
-  
+  min_sample <- overall_min <- r_ref <- r_alt <- r_total <- 
+    corrected_richness <- sum_corrected_richness <- 
+    mean_corrected_richness <- NULL
   # SET VERBOSITY
   verbose <- gl.check.verbosity(verbose)
 
@@ -454,7 +455,7 @@ gl.report.allelerich <- function(x,
   # Round numeric columns in each data frame of the result list to 4 decimal
   # places
   result <- lapply(result, function(df) {
-    df <- df %>% dplyr::mutate(across(where(is.numeric), ~ round(., digits = 6)))
+    df <- df %>% dplyr::mutate(dplyr::across(where(is.numeric), ~ round(., digits = 6)))
     as.data.frame(df)
   })
   
@@ -654,3 +655,5 @@ gl.report.allelerich <- function(x,
   # RETURN
   return(invisible(result))
 }
+
+
