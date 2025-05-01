@@ -371,7 +371,8 @@ gl.join <- function(x1,
     if (!is.null(x1@other$ind.metrics) &
         !is.null(x2@other$ind.metrics)) {
       x@other$ind.metrics <-
-        rbind(x1@other$ind.metrics, x2@other$ind.metrics)
+        # rbind(x1@other$ind.metrics, x2@other$ind.metrics)
+      dplyr::bind_rows(x1@other$ind.metrics, x2@other$ind.metrics)
     } else {
       cat(warn(
         "  Warning: Input genlight objects both lack individual metrics\n"
