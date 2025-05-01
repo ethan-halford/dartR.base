@@ -57,6 +57,7 @@ Other linker:
 \code{\link{gl2genepop}()},
 \code{\link{gl2geno}()},
 \code{\link{gl2gi}()},
+\code{\link{gl2hapmap}()},
 \code{\link{gl2hiphop}()},
 \code{\link{gl2plink}()},
 \code{\link{gl2related}()},
