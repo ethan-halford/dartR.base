@@ -70,7 +70,7 @@ A list of data frames containing:
 }
 \description{
 This function calculates allelic richness across populations for SNP data 
-in a \code{\linkS4class{genlight}} object, using a rarefaction-based approach 
+in a genlight object, using a rarefaction-based approach 
 adapted from El Mousadik and Petit (1996). By standardizing the expected number 
 of distinct alleles to a fixed sample size, it allows meaningful comparisons 
 among populations with different sampling depths. Because allelic richness 

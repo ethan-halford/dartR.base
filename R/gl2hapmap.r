@@ -39,7 +39,7 @@
 #' \donttest{
 #' require("dartR.data")
 #' # SNP data
-#' gl2hapmap(platypus.gl, outpath = tempdir()))
+#' gl2hapmap(platypus.gl, outpath = tempdir())
 #' }
 #'
 #' @export
@@ -55,7 +55,7 @@ gl2hapmap <- function(x,
                       center = NA,
                       protLSID = NA,
                       assayLSID = NA,
-                      panel = NA,
+                      panelLSID = NA,
                       QCcode = NA,
                       verbose = NULL) {
   # SET VERBOSITY
@@ -193,7 +193,7 @@ gl2hapmap <- function(x,
     center = center,
     protLSID = protLSID,
     assayLSID = assayLSID,
-    panel = panel,
+    panelLSID = panelLSID,
     QCcode = QCcode
   )
   
@@ -207,7 +207,7 @@ gl2hapmap <- function(x,
     "center"	,
     "protLSID",
     "assayLSID",
-    "panel"	,
+    "panelLSID"	,
     "QCcode"
   )
   
