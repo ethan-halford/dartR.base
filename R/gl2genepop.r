@@ -67,7 +67,7 @@ gl2genepop <- function (x,
   #works only with SNP data
   if (datatype != "SNP") {
     cat(error(
-      "  Only SNPs (diploid data can be transformed into genepop format!\n"
+      "  Only SNPs (diploid) data can be transformed into genepop format!\n"
     ))
     stop()
   }

@@ -68,6 +68,7 @@ Other linker:
 \code{\link{gl2genalex}()},
 \code{\link{gl2geno}()},
 \code{\link{gl2gi}()},
+\code{\link{gl2hapmap}()},
 \code{\link{gl2hiphop}()},
 \code{\link{gl2phylip}()},
 \code{\link{gl2plink}()},
