@@ -1,7 +1,22 @@
 # # bootstrapping function
-all.rich <- function(df,
-                    indices,
-                    boot_method = "loc") {
+#' @name utils.allelic.richness
+#' @title A utility script to calculate allelic richness using bootstraping
+#' @family utilities
+#' 
+#' @param df Dataframe with SNP data [required].
+#' @param indices indices [required].
+#' @param boot_method Bootstrapping method
+#' [default "loc"]
+#'  
+#' @author Custodian: Luis Mijangos -- Post to
+#'  \url{https://groups.google.com/d/forum/dartr}
+#'  
+#' @export
+#' @return calling function name
+
+utils.allelic.richness <- function(df,
+                                   indices,
+                                   boot_method = "loc") {
 
   allelicRichness <- function(){}  #to hack package checking...
   

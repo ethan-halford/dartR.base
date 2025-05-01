@@ -15,7 +15,7 @@ gl2hapmap(
   center = NA,
   protLSID = NA,
   assayLSID = NA,
-  panel = NA,
+  panelLSID = NA,
   QCcode = NA,
   verbose = NULL
 )
@@ -48,13 +48,13 @@ reference genome [default "+"].}
 
 \item{assayLSID}{Identifier HapMap assay used for genotyping [default NA].}
 
+\item{panelLSID}{Identifier for panel of individuals genotyped [default NA].}
+
 \item{QCcode}{Quality control for all entries [default NA].}
 
 \item{verbose}{Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 progress log; 3, progress and results summary; 5, full report
 [default 2, unless specified using gl.set.verbosity].}
-
-\item{panelLSID}{Identifier for panel of individuals genotyped [default NA].}
 }
 \value{
 returns no value (i.e. NULL)
@@ -70,7 +70,7 @@ definitions and per-sample genotype calls encoded as nucleotide pairs.
 \donttest{
 require("dartR.data")
 # SNP data
-gl2hapmap(platypus.gl, outpath = tempdir()))
+gl2hapmap(platypus.gl, outpath = tempdir())
 }
 
 }
