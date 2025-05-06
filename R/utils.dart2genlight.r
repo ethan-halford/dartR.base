@@ -288,7 +288,7 @@ utils.dart2genlight <- function(dart,
           if(any(is.na(pop_tmp))){
             pop_na <- which(is.na(pop_tmp))
             pop_tmp[pop_na] <- "pop1"
-            ind_na <- indNames(x)[pop_na]
+            ind_na <- indNames(gout)[pop_na]
             if (verbose >= 1) {
               cat(
                 warn(
