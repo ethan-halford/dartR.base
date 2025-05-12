@@ -6,12 +6,20 @@
 #' This function exports a genlight object into a SNPassoc object and requires 
 #' the package SNPassoc to be installed. 
 #' 
-#' To install this package check their github repository.
-#' \url{https://github.com/isglobal-brge/SNPassoc} and/or their webpage
-#' \url{https://isglobal-brge.r-universe.dev/SNPassoc} and/or use
+#' To install this package check their github repository:
+#' 
+#' \url{https://github.com/isglobal-brge/SNPassoc} 
+#' 
+#' and/or their webpage:
+#' 
+#' \url{https://isglobal-brge.r-universe.dev/SNPassoc}
+#' 
+#'  and/or use:
+#'  
 #' \code{install.packages('SNPassoc',
 #' repos = c('https://isglobal-brge.r-universe.dev',
 #' 'https://cloud.r-project.org'))}
+#' 
 #' @param x Name of the genlight object containing the SNP data [required].
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log; 3, progress and results summary; 5, full report
