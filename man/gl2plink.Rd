@@ -134,6 +134,7 @@ Other linker:
 \code{\link{gl2phylip}()},
 \code{\link{gl2related}()},
 \code{\link{gl2sa}()},
+\code{\link{gl2snapper}()},
 \code{\link{gl2structure}()},
 \code{\link{gl2treemix}()},
 \code{\link{gl2vcf}()}
