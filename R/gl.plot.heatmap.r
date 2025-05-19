@@ -170,26 +170,28 @@ gl.plot.heatmap <- function(D,
     
   }
   
-
-  
   if (datatype == "dist" | datatype == "matrix") {
     m <- as.matrix(D)
+    
+    if (!is.null(x) && ncol(m) != nInd(x)) {
+      colors_pops <- NULL
+      legend.print <- FALSE
+    }
+    
     if (diag.na)
       diag(m) <- NA
+    
     p3 <-
       utils.heatmap(
         m,
         col = palette.divergent(255),
         dendrogram = dendrogram,
-        
         margins = margins,
         na.color = na.color,
-        
         ColSideColors = colors_pops,
         RowSideColors = colors_pops,
         colRow = colors_pops,
         colCol = colors_pops,
-        
         revC = revC,
         symbreaks = symbreaks,
         trace = trace,
@@ -212,8 +214,6 @@ gl.plot.heatmap <- function(D,
         main = main,
         xlab = xlab,
         ylab = ylab,
-        
-        
         ...
       )
     if (legend.print) {
@@ -231,18 +231,21 @@ gl.plot.heatmap <- function(D,
   
   if (datatype == "fd") {
     m <- as.matrix(D$fd)
+    
+    if (!is.null(x) && ncol(m) != nInd(x)) {
+      colors_pops <- NULL
+    }
+    
     if (diag.na)
       diag(m) <- NA
+    
     p3 <-
       utils.heatmap(
         m,
         col = palette.divergent(255),
         dendrogram = dendrogram,
-        
         margins = margins,
         na.color = na.color,
-        
-        
         revC = revC,
         symbreaks = symbreaks,
         trace = trace,
