@@ -22,6 +22,15 @@
 #' [default NULL].
 #' @param plot.colors List of four color names for the column fill for homozygous reference,
 #' heterozygous, homozygous alternate, and missing value (NA) [default c("#0000FF","#00FFFF","#FF0000","#e0e0e0")].
+#' @param loc.names If TRUE, loci names are shown on the horiontal axis 
+#' [default FALSE].
+#' @param loc.order If TRUE, loci are ordered by chromosome and by SNP position
+#' [default FALSE].
+#' @param interactive If TRUE, an interactive version is generated 
+#' [default FALSE].
+#' @param den If TRUE, a dendrogram is generated and used to order individuals 
+#' [default FALSE].
+#' [default FALSE].
 #' @param plot.dir Directory to save the plot RDS files [default as specified 
 #' by the global working directory or tempdir()]#' 
 #' @param plot.file Name for the RDS binary file to save (base name only, exclude extension) [default NULL]
@@ -61,6 +70,10 @@ gl.smearplot <- function(x,
                         group.pop = FALSE, 
                         plot.theme = NULL,
                         plot.colors = NULL,
+                        loc.names = FALSE,
+                        loc.order = FALSE,
+                        interactive = FALSE,
+                        den = FALSE, 
                         plot.file=NULL,
                         plot.dir=NULL,
                         het.only=FALSE,
@@ -117,12 +130,41 @@ gl.smearplot <- function(x,
     }
 
     # DO THE JOB
+    if(loc.order){
+      if(!is.null(x$chromosome)){
+        x <- x[,order(x@chromosome,x@position)]
+      }else{
+        if(verbose >= 2)cat(warn("  There is no chromosome information for ordering\n"))
+      }
+    }
+    
     
     # pull the data from the genlight object, and place in a dataframe
     df.matrix <- as.data.frame(as.matrix(x))
     colnames(df.matrix) <- 1:nLoc(x)
     df.matrix$id <- individuals
     df.matrix$pop <- pop(x)
+    
+    if(den){
+      res <- gl.dist.ind(x,method = "Manhattan",plot.display = FALSE,verbose = 0)
+      reorderfun <- function(d, w) reorder(d, w, agglo.FUN = mean)
+      distr <- dist(res)
+      hcr <- hclust(distr)
+      ddr <- as.dendrogram(hcr)
+      ddr <- reorderfun(ddr, TRUE)
+      p_den <- ggdendro::ggdendrogram(ddr,rotate = T)
+      rowInd <- order.dendrogram(ddr)
+      rowInd_2 <- data.frame(Label=indNames(x)[rowInd])
+      rowInd_2$order_d <- 1:nInd(x)
+      df.matrix2 <- df.matrix
+      df.matrix2$Label <- rownames(df.matrix)
+      df.matrix3 <- merge(df.matrix2,rowInd_2,by= "Label")
+      df.matrix3 <- df.matrix3[order(df.matrix3$order_d),]
+      df.matrix3$id <- as.factor(df.matrix3$order_d)
+      df.matrix <- df.matrix3[,-1]
+      df.matrix <- df.matrix[,-ncol(df.matrix)]
+      individuals <- df.matrix3$Label
+    }
     
     # convert the data to long form
     df.listing <- reshape2::melt(df.matrix, id.vars = c("pop", "id"))
@@ -343,6 +385,28 @@ gl.smearplot <- function(x,
                               ncol = 1,
                               dir = "v",
                               scales = "free_y")
+    }
+    
+    if(interactive){
+      plott <- plotly::ggplotly(p3)
+      show(plott)
+    }
+
+    if(loc.names){
+      loc_labels <- locNames(x)
+      p3 <- p3 + 
+        scale_x_discrete(
+          breaks = 1:nLoc(x),
+          labels = loc_labels,
+          name = ""
+        ) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+    }
+    
+    if(den){
+      design <-  "AB"
+      p3 <- p3 + p_den  + 
+        plot_layout(design = design)
     }
     
     # PRINTING OUTPUTS
