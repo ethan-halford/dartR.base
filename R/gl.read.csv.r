@@ -5,25 +5,25 @@
 #' @description
 #' This script takes SNP genotypes from a csv file, combines them with
 #' individual and locus metrics and creates a genlight object.
-
+#' 
 #' The SNP data need to be in one of two forms. SNPs can be coded 0 for
 #' homozygous reference, 2 for homozygous alternate, 1 for heterozygous, and NA 
 #' for missing values; or the SNP data can be coded A/A, A/C, C/T, G/A etc,
 #' and -/- for missing data. In this format, the reference allele is the most 
 #' frequent allele, as used by DArT. Other formats will throw an error.
-
+#' 
 #' The SNP data need to be individuals as rows, labeled, and loci as columns,
 #' also labeled. If the orientation is individuals as columns and loci by rows,
 #'  then set transpose=TRUE.
-
+#'  
 #' The individual metrics need to be in a csv file, with headings, with a
 #'  mandatory id column corresponding exactly to the individual identity labels
 #'  provided with the SNP data and in the same order.
-
+#'  
 #' The locus metadata needs to be in a csv file with headings, with a mandatory
 #' column headed AlleleID corresponding exactly to the locus identity labels
 #' provided with the SNP data and in the same order.
-
+#' 
 #' Note that the locus metadata will be complemented by calculable statistics
 #' corresponding to those that would be provided by Diversity Arrays Technology
 #' (e.g. CallRate).
@@ -178,6 +178,7 @@ gl.read.csv <- function(filename,
             v1 <- paste(v1, collapse = " ")
             v1 <- gsub("/", " ", v1)
             v1 <- gsub("- ", "", v1)
+            v1 <- gsub("-", "", v1)   
             v1 <- toupper(v1)
             v1 <- unlist(strsplit(v1, " "))
             tmp <- table(v1)
@@ -225,10 +226,6 @@ gl.read.csv <- function(filename,
         s2 <- unlist(strsplit(s1, " "))
         tmp <- table(s2)
         if ( any(names(tmp) %in% c("0","1","2","NA"))==FALSE){
-          # !(names(tmp) == "0" ||
-          #     names(tmp) == "1" ||
-          #     names(tmp) == "2" ||
-          #     names(tmp) == "NA")) {
             cat(
                 error(
                     "Fatal Error: Genotypes must be defined by the numbers 0, 1, 2 or missing NA\n"
@@ -251,10 +248,8 @@ gl.read.csv <- function(filename,
     
     pop(gl) <- array("A", nInd(gl))
     gl <- gl.compliance.check(gl, verbose = verbose)
-    # gl@other$loc.metrics <- data.frame(CloneID = locNames(gl), AlleleID = locNames(gl))
-    gl@other$ind.metrics <-
-        data.frame(id <-
-                       indNames(gl), pop = array("A", nInd(gl)))
+    gl@other$ind.metrics <- data.frame(id = indNames(gl),
+                                       pop = array("A", nInd(gl)))
     
     # NOW THE LOCUS METADATA
     
