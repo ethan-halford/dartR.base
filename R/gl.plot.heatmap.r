@@ -111,6 +111,9 @@ gl.plot.heatmap <- function(D,
                             
                             verbose = NULL,
                             ...) {
+  
+  
+  
   # SET VERBOSITY
   verbose <- gl.check.verbosity(verbose)
   
@@ -125,6 +128,18 @@ gl.plot.heatmap <- function(D,
     utils.check.datatype(D,
                          accept = c("dist", "fd", "matrix"),
                          verbose = verbose)
+  # CHECK IF PACKAGES ARE INSTALLED
+  pkg <- "dendextend"
+  if (!(requireNamespace(pkg, quietly = TRUE))) {
+    cat(error(
+      "Package",
+      pkg,
+      " needed for this function to work. Please install it.\n"
+    ))
+    return(-1)
+  }
+  
+  
   
   # DO THE JOB
   

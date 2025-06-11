@@ -90,7 +90,6 @@
 #' Andy Liaw (original); R. Gentleman, M. Maechler, W. Huber, G. Warnes (revisions)
 #'
 #' @importFrom graphics layout strheight strwidth mtext rect abline plot.new title
-#' @importFrom gtools invalid
 #'
 #' @examples
 #' data(mtcars)
@@ -502,7 +501,25 @@ utils.heatmap <- function(x,
   retval$col <- col
   
   # Handle NA values
-  if (!invalid(na.color) & any(is.na(x))) {
+  
+  invalid2 <-  function (x) 
+  {
+    if (missing(x) || is.null(x) || length(x) == 0 || is(x, "try-error")) {
+      return(TRUE)
+    }
+    if (is.list(x)) {
+      return(all(sapply(x, invalid2)))
+    }
+    else if (is.vector(x)) {
+      return(all(is.na(x)))
+    }
+    else {
+      return(FALSE)
+    }
+  }
+  
+  
+  if (!invalid2(na.color) & any(is.na(x))) {
     mmat <- ifelse(is.na(x), 1, NA)
     image(
       1:nc,
@@ -723,7 +740,7 @@ utils.heatmap <- function(x,
     
     flag <- try(
       ddc %>%
-        set("labels_col", colCol) %>%
+        dendextend::set("labels_col", colCol) %>%
         plot(xaxs = "i"))
     if ("try-error" %in% class(flag)) {
       cond <- attr(flag, "condition")

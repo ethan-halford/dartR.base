@@ -482,7 +482,7 @@ gl.report.heterozygosity <- function(x,
     for (y in 1:length(sgl)) {
       y_temp <- sgl[[y]]
       hold <- y_temp
-      mono_tmp <- gl.allele.freq(y_temp, simple = TRUE, verbose = 0)
+      mono_tmp <- gl.alf(y_temp)
       loc.list <- rownames(mono_tmp[which(mono_tmp$alf1 == 1 |
                                             mono_tmp$alf1 == 0), ])
       loc.list_NA <- which(colSums(is.na(as.matrix(y_temp)))==nInd(y_temp))

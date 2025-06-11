@@ -90,7 +90,17 @@ gl.smearplot <- function(x,
       ))
       return(-1)
     }
-    
+   if (den) {
+     pkg <- "ggdendro"
+    if (!(requireNamespace(pkg, quietly = TRUE))) {
+      cat(error(
+        "Package",
+        pkg,
+        " needed for this function to work. Please install it.\n"
+      ))
+      return(-1)
+    }
+    }
     # SET VERBOSITY
     verbose <- gl.check.verbosity(verbose)
     if(verbose==0){plot.display <- FALSE}
