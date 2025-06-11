@@ -700,7 +700,7 @@ utils.heatmap <- function(x,
     
     flag <- try(
       ddr %>%
-        set("labels_col", colRow) %>%
+        dendextend::set("labels_col", colRow) %>%
         plot(yaxs = "i",horiz = TRUE))
     
     if ("try-error" %in% class(flag)) {

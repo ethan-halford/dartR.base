@@ -52,7 +52,7 @@
 #' \link[gplots]{heatmap.2} (package gplots)
 #'
 #' @author Custodian: Luis Mijangos -- Post to
-#' \url{https://groups.google.com/d/forum/dartr})
+#' \url{https://groups.google.com/d/forum/dartr}
 #'
 #' @examples
 #' \donttest{
@@ -70,7 +70,6 @@
 #'    }
 #' @importFrom graphics legend
 #' @importFrom gtools invalid 
-#' @importFrom dendextend set
 #' @export
 #' @return returns no value (i.e. NULL)
 

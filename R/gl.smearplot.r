@@ -386,11 +386,6 @@ gl.smearplot <- function(x,
                               dir = "v",
                               scales = "free_y")
     }
-    
-    if(interactive){
-      plott <- plotly::ggplotly(p3)
-      show(plott)
-    }
 
     if(loc.names){
       loc_labels <- locNames(x)
@@ -403,7 +398,12 @@ gl.smearplot <- function(x,
         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
     }
     
-    if(den){
+    if(interactive){
+      p3 <- plotly::ggplotly(p3)
+    }
+    
+    if(den &
+       interactive == FALSE){
       design <-  "AB"
       p3 <- p3 + p_den  + 
         plot_layout(design = design)
@@ -429,5 +429,5 @@ gl.smearplot <- function(x,
     
     # RETURN
     
-    invisible(p3)
+    return(p3)
 }

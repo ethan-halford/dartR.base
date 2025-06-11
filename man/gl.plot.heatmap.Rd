@@ -161,6 +161,6 @@ Other graphics:
 }
 \author{
 Custodian: Luis Mijangos -- Post to
-\url{https://groups.google.com/d/forum/dartr})
+\url{https://groups.google.com/d/forum/dartr}
 }
 \concept{graphics}
