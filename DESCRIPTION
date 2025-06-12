@@ -36,7 +36,7 @@ Depends: R (>= 3.5), adegenet (>= 2.0.0), ggplot2, dplyr, dartR.data
 biocViews:
 Imports: ape,crayon,data.table,foreach,gridExtra,methods,patchwork,plyr,
          reshape2,SNPRelate,StAMPP,stats,stringr,tidyr,utils,MASS,SNPassoc,
-         snpStats, raster
+         snpStats
 Suggests: 
     boot,
     devtools,
@@ -85,7 +85,6 @@ Suggests:
     shinyWidgets,
     SIBER,
     stringi,
-    terra,
     tibble,
     vcfR,
     zoo,
@@ -94,7 +93,8 @@ Suggests:
     testthat (>= 3.0.0), 
     ggtern, 
     dendextend,
-    ggdendro
+    ggdendro,
+    terra
 License: GPL (>= 3)
 RoxygenNote: 7.3.2
 NeedsCompilation: no
