@@ -63,7 +63,6 @@
 #' ind.circle.transparency=0.5)
 #' 
 #' @importFrom methods is
-#' @importFrom raster raster
 #' @export
 #' @return plots a map
 
@@ -312,7 +311,7 @@ individuals nor the number of populations."
           #   raster.colors <- scales::viridis_pal(option = "D")(255)
           # }
           
-          r <- raster::raster(raster.image)
+          r <- terra::rast(raster.image)
           plot.map <- plot.map  %>% 
             leaflet::addRasterImage(r, 
                                     opacity = raster.opacity,
