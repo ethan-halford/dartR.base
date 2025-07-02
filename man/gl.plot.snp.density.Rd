@@ -18,7 +18,7 @@ gl.plot.snp.density(
 )
 }
 \arguments{
-\item{x}{A **genlight** object with chromosome information in
+\item{x}{A genlight object with chromosome information in
 @chromosome and SNP positions in @position
 [required].}
 
@@ -32,7 +32,7 @@ be plotted [default 50].}
 [default 1 000 000].}
 
 \item{color.palette}{A function returning a vector of colours to be
-passed to **ggplot2**; typically viridis::viridis
+passed to ggplot2; typically viridis::viridis
 [default viridis::viridis].}
 
 \item{chr.info}{Logical; if TRUE append (N SNPs, L Mb) to
@@ -40,7 +40,7 @@ chromosome labels [default TRUE].}
 
 \item{plot.title}{Optional main title for the plot [default NULL].}
 
-\item{plot.theme}{**ggplot2** theme applied to the plot
+\item{plot.theme}{ggplot2 theme applied to the plot
 [default theme_dartR()].}
 
 \item{save2tmp}{Logical; save the ggplot object to tempdir()
@@ -57,21 +57,21 @@ A ggplot object (invisibly) displaying the SNP-density
 }
 \description{
 Generates a tiled heat-map of single-nucleotide polymorphisms (SNPs)
-across chromosomes or scaffolds in a *genlight* object. SNPs are binned
+across chromosomes or scaffolds in a genlight object. SNPs are binned
 into fixed-width windows and coloured by SNP count, optionally
 annotating chromosomes with their length (Mb) and SNP number.
 }
 \details{
 Chromosomes are ordered from longest (bottom) to shortest (top) so that
 density patterns can be compared visually.  Bins containing no SNPs are
-rendered in the lowest colour of the palette.  The function does **not**
-modify the input *genlight* object.
+rendered in the lowest colour of the palette.  The function does not
+modify the input genlight object.
 }
 \examples{
 
   t1 <- platypus.gl
-  t1@chromosome <- t1$other$loc.metrics$Chrom_Platypus_Chrom_NCBIv1
-  t1@position   <- t1$other$loc.metrics$ChromPos_Platypus_Chrom_NCBIv1
+  t1$chromosome <- t1$other$loc.metrics$Chrom_Platypus_Chrom_NCBIv1
+  t1$position   <- t1$other$loc.metrics$ChromPos_Platypus_Chrom_NCBIv1
   gl.plot.snp.density(t1,
                       bin.size   = 5e6,
                       min.snps   = 10,

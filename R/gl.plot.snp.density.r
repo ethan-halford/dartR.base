@@ -4,11 +4,11 @@
 #'
 #' @description
 #' Generates a tiled heat-map of single-nucleotide polymorphisms (SNPs)
-#' across chromosomes or scaffolds in a *genlight* object. SNPs are binned
+#' across chromosomes or scaffolds in a genlight object. SNPs are binned
 #' into fixed-width windows and coloured by SNP count, optionally
 #' annotating chromosomes with their length (Mb) and SNP number.
 #'
-#' @param x            A **genlight** object with chromosome information in
+#' @param x            A genlight object with chromosome information in
 #'                     @chromosome and SNP positions in @position
 #'                     [required].
 #' @param bin.size     Width (bp) of the genomic bins used to count SNPs
@@ -18,12 +18,12 @@
 #' @param min.length   Minimum chromosome length (bp) to include
 #'                     [default 1 000 000].
 #' @param color.palette A function returning a vector of colours to be
-#'                     passed to **ggplot2**; typically viridis::viridis
+#'                     passed to ggplot2; typically viridis::viridis
 #'                     [default viridis::viridis].
 #' @param chr.info     Logical; if TRUE append (N SNPs, L Mb) to
 #'                     chromosome labels [default TRUE].
 #' @param plot.title   Optional main title for the plot [default NULL].
-#' @param plot.theme   **ggplot2** theme applied to the plot
+#' @param plot.theme   ggplot2 theme applied to the plot
 #'                     [default theme_dartR()].
 #' @param save2tmp     Logical; save the ggplot object to tempdir()
 #'                     for later retrieval with gl.print.reports()
@@ -35,20 +35,21 @@
 #' @details
 #' Chromosomes are ordered from longest (bottom) to shortest (top) so that
 #' density patterns can be compared visually.  Bins containing no SNPs are
-#' rendered in the lowest colour of the palette.  The function does **not**
-#' modify the input *genlight* object.
+#' rendered in the lowest colour of the palette.  The function does not
+#' modify the input genlight object.
 #'
 #' @return A ggplot object (invisibly) displaying the SNP-density
 #'         heat-map.
 #'
 #' @author Custodian: Luis Mijangos -- Post to
 #' \url{https://groups.google.com/d/forum/dartr}
-#'
+#' 
+#' @export
 #' @examples
 #' 
 #'   t1 <- platypus.gl
-#'   t1@chromosome <- t1$other$loc.metrics$Chrom_Platypus_Chrom_NCBIv1
-#'   t1@position   <- t1$other$loc.metrics$ChromPos_Platypus_Chrom_NCBIv1
+#'   t1$chromosome <- t1$other$loc.metrics$Chrom_Platypus_Chrom_NCBIv1
+#'   t1$position   <- t1$other$loc.metrics$ChromPos_Platypus_Chrom_NCBIv1
 #'   gl.plot.snp.density(t1,
 #'                       bin.size   = 5e6,
 #'                       min.snps   = 10,
@@ -59,9 +60,7 @@
 #'   expansion
 #' @importFrom dplyr filter group_by summarise arrange desc mutate
 #'   inner_join count n
-#' @export
-#'
-#'
+
 gl.plot.snp.density <- function(x,
                                 bin.size      = 1e6,
                                 min.snps      = 50,
@@ -75,17 +74,17 @@ gl.plot.snp.density <- function(x,
   
   pos <- n_snps <- chr_size <- bin_start <- chr_label <- bin_center <- NULL
   
-  #'#' SET VERBOSITY
+  # SET VERBOSITY
   verbose <- gl.check.verbosity(verbose)
   
-  #'#' FLAG SCRIPT START
+  # FLAG SCRIPT START
   funname <- match.call()[[1]]
   utils.flag.start(func = funname, verbose = verbose)
   
-  #'#' CHECK DATATYPE
+  # CHECK DATATYPE
   utils.check.datatype(x, accept = "SNP", verbose = verbose)
   
-  #'#' DEPENDENCY CHECKS
+  # DEPENDENCY CHECKS
   needed_pkgs <- c("ggplot2", "dplyr", "viridis")
   for (pkg in needed_pkgs) {
     if (!requireNamespace(pkg, quietly = TRUE)) {
@@ -94,7 +93,7 @@ gl.plot.snp.density <- function(x,
     }
   }
   
-  #'#' FUNCTION-SPECIFIC CHECKS
+  # FUNCTION-SPECIFIC CHECKS
   if (bin.size <= 0) {
     stop(error("Parameter bin.size must be > 0 bp.\n"))
   }
@@ -105,7 +104,7 @@ gl.plot.snp.density <- function(x,
     stop(error("Parameter min.length must be > 1 bp.\n"))
   }
   
-  #'#' Extract valid chromosome / position pairs
+  # Extract valid chromosome / position pairs
   df_info <- data.frame(chr = as.character(x@chromosome),
                         pos = x@position,
                         stringsAsFactors = FALSE) |>
@@ -119,7 +118,7 @@ gl.plot.snp.density <- function(x,
     cat(report("  Retained", nrow(df_info), "SNPs after initial filtering\n"))
   }
   
-  #'#' Summarise chromosomes & apply filters 
+  # Summarise chromosomes & apply filters 
   chr_stats <- df_info |>
     dplyr::group_by(chr) |>
     dplyr::summarise(chr_size = max(pos, na.rm = TRUE),
@@ -133,7 +132,7 @@ gl.plot.snp.density <- function(x,
     stop(error("No chromosomes meet the min.snps / min.length criteria.\n"))
   }
   
-  #'#' Build y axis labels & factor ordering
+  # Build y axis labels & factor ordering
   chr_stats <- chr_stats |>
     dplyr::mutate(
       chr_label = if (chr.info) {
@@ -142,10 +141,8 @@ gl.plot.snp.density <- function(x,
         chr
       }
     )
-  chr_stats$chr_label <- factor(chr_stats$chr_label,
-                                levels = chr_stats$chr_label)  #' preserve order
-  
-  #'#' Bin SNPs
+
+  # Bin SNPs
   plot_dat <- df_info |>
     dplyr::inner_join(chr_stats, by = "chr") |>
     dplyr::mutate(
@@ -154,9 +151,13 @@ gl.plot.snp.density <- function(x,
     ) |>
     dplyr::count(chr_label, bin_center, name = "n_snps")
   
+  plot_dat$chr_label <- factor(plot_dat$chr_label,
+                               levels = sort(unique(plot_dat$chr_label),
+                                             decreasing = T))
+  
   xmax <- max(plot_dat$bin_center) + bin.size / 2
   
-  #'#' Draw heat-map
+  # Draw heat-map
   p1 <- ggplot2::ggplot(plot_dat,
                         ggplot2::aes(x = bin_center,
                                      y = chr_label,
@@ -183,10 +184,10 @@ gl.plot.snp.density <- function(x,
       axis.ticks.x = ggplot2::element_line()
     )
   
-  #'#' DISPLAY OUTPUT
+  # DISPLAY OUTPUT
   print(p1)
   
-  #'#' SAVE TO TEMPDIR (optional)
+  # SAVE TO TEMPDIR (optional)
   if (save2tmp) {
     tmp_plot <- tempfile(pattern = paste0("dartR_plot_", funname, "_"),
                          fileext = ".rds")
@@ -197,11 +198,11 @@ gl.plot.snp.density <- function(x,
     }
   }
   
-  #'#' FLAG SCRIPT END
+  # FLAG SCRIPT END
   if (verbose >= 1) {
     cat(report("Completed:", funname, "\n"))
   }
   
-  #'#' RETURN 
+  # RETURN 
   invisible(p1)
 }

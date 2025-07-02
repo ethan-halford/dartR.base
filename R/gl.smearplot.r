@@ -162,7 +162,9 @@ gl.smearplot <- function(x,
       hcr <- hclust(distr)
       ddr <- as.dendrogram(hcr)
       ddr <- reorderfun(ddr, TRUE)
-      p_den <- ggdendro::ggdendrogram(ddr,rotate = T)
+      p_den <- ggdendro::ggdendrogram(ddr,rotate = T) +
+        # theme_void() +
+        theme(plot.margin = margin(0, 0, 0, 0))
       rowInd <- order.dendrogram(ddr)
       rowInd_2 <- data.frame(Label=indNames(x)[rowInd])
       rowInd_2$order_d <- 1:nInd(x)
