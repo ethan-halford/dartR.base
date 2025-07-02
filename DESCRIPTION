@@ -36,7 +36,7 @@ Depends: R (>= 3.5), adegenet (>= 2.0.0), ggplot2, dplyr, dartR.data
 biocViews:
 Imports: ape,crayon,data.table,foreach,gridExtra,methods,patchwork,plyr,
          reshape2,SNPRelate,StAMPP,stats,stringr,tidyr,utils,MASS,SNPassoc,
-         snpStats
+         snpStats,gtools
 Suggests: 
     boot,
     devtools,
