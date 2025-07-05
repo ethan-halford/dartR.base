@@ -35,15 +35,28 @@
 #' \url{https://groups.google.com/d/forum/dartr}
 
 #' @examples
+#' # Join by adding loci to a set of common individuals
 #' x1 <- testset.gl[,1:100]
 #' x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
 #' nLoc(x1)
 #' x2 <- testset.gl[,101:150]
 #' x2@other$loc.metrics <-  testset.gl@other$loc.metrics[101:150,]
 #' nLoc(x2)
-#' gl <- gl.join(x1, x2, verbose=2)
+#' gl <- gl.join(x1, x2, verbose=3)
 #' nLoc(gl)
 #' 
+#' # Join by adding individuals with a set of common loci
+#' nInd(testset.gl)
+#' x1 <- gl.drop.ind(testset.gl,ind.list=c("AA010915","UC_00126","AA032760","AA013214",
+#' "AA011723","AA012411","AA019237","AA019238","AA019239","AA019235","AA019240",
+#' "AA019241","AA019242","AA019243"))
+#' nInd(x1)
+#' x2 <- gl.keep.ind(testset.gl,ind.list=c("AA010915","UC_00126","AA032760","AA013214",
+#' "AA011723","AA012411","AA019237","AA019238","AA019239","AA019235","AA019240",
+#' "AA019241","AA019242","AA019243"))
+#' nInd(x2)
+#' gl <- gl.join(x1, x2, verbose=3)
+#' nInd(gl)
 #' @export
 #' @return A new genlight object
 
@@ -136,63 +149,8 @@ gl.join <- function(x1,
       cat(error("Fatal Error: Individuals or loci in the two files do not match\n"))
       stop()
     }
-    
-    # if(!(method %in% c('sidebyside','end2end'))){
-    #   cat(warn("  Warning: parameter by must be either 'sidebyside' or 'end2end', set to default 'sidebyside'\n"))
-    #   method <- "sidebyside"
-    # }
-    #
-    # if(method=='sidebyside'){
-    #   # Check that names and ind.metadata are the same and in the same order
-    #   if (!identical(indNames(x1), indNames(x2))) {
-    #     stop(
-    #       error(
-    #         "Fatal Error: the two genlight objects do not have data for the same individuals in the same order\n"
-    #       )
-    #     )
-    #   }
-    #   if (!is.null(x1@other$ind.metrics)) {
-    #     if (!identical(x1@other$ind.metrics, x1@other$ind.metrics)) {
-    #       stop(
-    #         error(
-    #           "Fatal Error: the two genlight objects do not have identical metadata for the same individuals\n"
-    #         )
-    #       )
-    #     }
-    #   }
-    
-    if (!is.null(x1@other$latlon)) {
-      if (!identical(x1@other$latlon, x2@other$latlon)) {
-        stop(
-          error(
-            "Fatal Error: the two genlight objects do not have latlon data for the same individuals\n"
-          )
-        )
-      }
-    }
-    
-    
-    # if(method=='end2end'){
-    #   # Check that names and loc.metadata are the same and in the same order
-    #   if (!identical(locNames(x1), locNames(x2))) {
-    #     stop(
-    #       error(
-    #         "Fatal Error: the two genlight objects do not have data for the same loci in the same order\n"
-    #       )
-    #     )
-    #   }
-    #   if (!is.null(x1@other$loc.metrics)) {
-    #     if (!identical(x1@other$loc.metrics, x1@other$loc.metrics)) {
-    #       stop(
-    #         error(
-    #           "Fatal Error: the two genlight objects do not have identical metadata for the same loci\n"
-    #         )
-    #       )
-    #     }
-    #   }
-    # }
-    
-    # DO THE JOB --------------
+
+# DO THE JOB --------------
     
 if (verbose >= 2) {
   if(flag == "ind"){
@@ -276,23 +234,7 @@ if(flag == "ind"){
       )
     )
   }
-  
-  # Add the lat lon metrics, assuming they are the same in both genlight objects
-  if (verbose >= 2) {
-    cat(report("  Adding the latlons if they exist\n"))
-  }
-  if (!is.null(x1@other$latlon)) {
-    x@other$latlon <- x1@other$latlon
-  } else if (!is.null(x2@other$latlon)) {
-    x@other$latlon <- x2@other$latlon
-  } else {
-    cat(
-      warn(
-        "  Warning: Input genlight objects and/or output genlight object lacks latlon data\n"
-      )
-    )
-  }
-  
+ 
   # Add the loc metrics flags, set to 1 only if 1 in both genlight objects
   if (verbose >= 2) {
     cat(report("  Setting the locus metrics flags\n"))
@@ -470,7 +412,7 @@ if(flag=="loc"){
     }
     
     if (verbose >= 3) {
-        cat("    combined genlight object has", nInd(x1), "individuals\n")
+        cat("    Combined genlight object has", nInd(x), "individuals\n")
         cat("    Combined genlight object has", nLoc(x), "loci\n")
     }
     
