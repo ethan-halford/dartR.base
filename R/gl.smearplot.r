@@ -138,6 +138,10 @@ gl.smearplot <- function(x,
     } else {
       individuals <- seq(1:nInd(x))
     }
+    
+    if(den){ 
+      group.pop <- FALSE
+    }
 
     # DO THE JOB
     if(loc.order){
