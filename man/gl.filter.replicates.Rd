@@ -17,6 +17,8 @@ gl.filter.replicates(
 \arguments{
 \item{x}{Name of the genlight object containing the SNP data [required].}
 
+\item{replicates.report}{Output of functionv gl.report.replicates [required].}
+
 \item{loc_threshold}{Minimum number of loci required to asses that two 
 individuals are replicates [default 100].}
 
