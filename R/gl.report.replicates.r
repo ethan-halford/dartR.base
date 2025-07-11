@@ -5,7 +5,7 @@
 #' @param x Name of the genlight object containing the SNP data [required].
 #' @param loc_threshold Minimum number of loci required to asses that two 
 #' individuals are replicates [default 100].
-#' @param perc_geno Mimimum percentage of genotypes in which two individuals 
+#' @param perc_geno Minimum percentage of genotypes in which two individuals 
 #' should be the same [default 0.95]. 
 #' @param plot.out Specify if plot is to be produced [default TRUE].
 #' @param plot_theme User specified theme [default theme_dartR()].
@@ -80,6 +80,7 @@ gl.report.replicates <- function(x,
   pairwiseMatchParallel <- function() {}
   
   # Define and compile a C++ function that computes pairwise shared/non-missing counts in parallel
+  suppressWarnings(
   Rcpp::cppFunction(
     code = '
     #include <Rcpp.h>
@@ -136,6 +137,7 @@ gl.report.replicates <- function(x,
   ',
     depends = "RcppParallel",
     plugin  = "cpp11"
+  )
   )
   
   # Call the compiled C++ function
