@@ -3,6 +3,7 @@
 #' @description
 #' Remove replicated individuals 
 #' @param x Name of the genlight object containing the SNP data [required].
+#' @param replicates.report Output of functionv gl.report.replicates [required].
 #' @param loc_threshold Minimum number of loci required to asses that two 
 #' individuals are replicates [default 100].
 #' @param perc_geno Minimum percentage of genotypes in which two individuals 
@@ -38,6 +39,8 @@ gl.filter.replicates <- function(x,
                                  recalc = FALSE,
                                  mono.rm = FALSE,
                                  verbose = NULL){
+  
+  ind1 <- ind1_miss <- ind2 <- ind2_miss <- ind_to_drop <- nloc <- perc <- NULL
   
   # Determine verbosity level (internal helper)
   verbose  <- gl.check.verbosity(verbose)
