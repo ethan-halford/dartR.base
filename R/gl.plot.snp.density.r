@@ -55,11 +55,7 @@
 #'                       min.snps   = 10,
 #'                       min.length = 2e6,
 #'                       plot.title = "Platypus SNP density")
-#' @importFrom ggplot2 ggplot geom_tile scale_x_continuous
-#'   scale_fill_gradientn labs theme element_blank element_line
-#'   expansion
-#' @importFrom dplyr filter group_by summarise arrange desc mutate
-#'   inner_join count n
+
 
 gl.plot.snp.density <- function(x,
                                 bin.size      = 1e6,
@@ -105,10 +101,19 @@ gl.plot.snp.density <- function(x,
   }
   
   # Extract valid chromosome / position pairs
-  df_info <- data.frame(chr = as.character(x@chromosome),
-                        pos = x@position,
-                        stringsAsFactors = FALSE) |>
-    dplyr::filter(!is.na(chr) & chr != "" & !is.na(pos) & pos > 0)
+  df_info <- data.frame(
+    chr = as.character(x@chromosome),
+    pos = x@position,
+    stringsAsFactors = FALSE
+  )
+  
+  # keep only rows where chr is non-NA/non-empty and pos > 0
+  df_info <- df_info[
+    !is.na(df_info$chr) &
+      df_info$chr != ""    &
+      !is.na(df_info$pos)  &
+      df_info$pos > 0,
+  ]
   
   if (nrow(df_info) == 0) {
     stop(error("No valid chromosome/position data found in x.\n"))
@@ -149,7 +154,9 @@ gl.plot.snp.density <- function(x,
       bin_start  = floor(pos / bin.size) * bin.size,
       bin_center = bin_start + bin.size / 2
     ) |>
-    dplyr::count(chr_label, bin_center, name = "n_snps")
+    as.data.frame() |>
+    plyr::count(vars = c("chr_label", "bin_center")) |>
+    plyr::rename(c("freq" = "n_snps"))
   
   plot_dat$chr_label <- factor(plot_dat$chr_label,
                                levels = sort(unique(plot_dat$chr_label),
