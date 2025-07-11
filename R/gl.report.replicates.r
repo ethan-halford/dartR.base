@@ -187,6 +187,7 @@ gl.report.replicates <- function(x,
   # Also prepare a list of all replicates per focal sample
   keep_pairs   <- mat_prop >= perc_geno & mat_nonmiss > loc_threshold
   ind_list_rep <- apply(keep_pairs, 2, function(v) indNames(x)[v])
+  ind_list_rep <- ind_list_rep[lengths(ind_list_rep) > 0]
   
   # If plotting is requested, show overall and zoomed-in histograms
   if (plot.out) {
