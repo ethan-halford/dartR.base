@@ -60,7 +60,7 @@ frequencies or presence-absence data
 The distance measure for SNP genotypes can be one of:
 \itemize{
  \item Euclidean Distance [method = "Euclidean"]
- \item Scaled Euclidean Distance [method='Euclidean", scale=TRUE]
+ \item Scaled Euclidean Distance [method="Euclidean", scale=TRUE]
  \item Simple Mismatch Distance [method="Simple"]
  \item Absolute Mismatch Distance [method="Absolute"]
  \item Czekanowski (Manhattan) Distance [method="Manhattan"]
@@ -68,10 +68,10 @@ The distance measure for SNP genotypes can be one of:
 The distance measure for Sequence Tag Presence/Absence data (binary) can be one of:
 \itemize{
  \item Euclidean Distance [method = "Euclidean"]
- \item Scaled Euclidean Distance [method='Euclidean", scale=TRUE]
- \item Simple Matching Distance [method="Simple"]
- \item Jaccard Distance [method="Jaccard"]
- \item Bray-Curtis Distance [method="Bray-Curtis"]
+ \item Scaled Euclidean Distance [method = "Euclidean", scale = TRUE]
+ \item Simple Matching Distance [method = "Simple"]
+ \item Jaccard Distance [method = "Jaccard"]
+ \item Bray-Curtis Distance [method = "Bray-Curtis"]
  }
 Refer to the documentation of functions in
   https://doi.org/10.1101/2023.03.22.533737 for algorithms
