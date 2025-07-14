@@ -232,13 +232,13 @@ NumericMatrix dist_mod2(const NumericMatrix& x,
         if ((L - N00) > 0) dist = (double)(N01 + N10) / (L - N00);
 
       } else if (method == "bray-curtis") {
-        // Bray–Curtis dissimilarity
+        // BrayCurtis dissimilarity
         double num = 2.0 * N11;
         double den = 2.0 * N11 + N01 + N10;
         if (den > 0) dist = 1.0 - num / den;
 
       } else if (method == "sorensen") {
-        // Sørensen distance approximation
+        // Sorensen distance approximation
         if ((L - N00 + N11) > 0) dist = (N01 + (double)N10) / (L - N00 + N11);
       }
 
