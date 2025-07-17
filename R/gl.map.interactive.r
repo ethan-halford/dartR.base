@@ -200,7 +200,7 @@ individuals nor the number of populations."
           m <- m %>%
             leaflet::addScaleBar(
               position = "bottomright",
-              options = scaleBarOptions(
+              options = leaflet::scaleBarOptions(
                 metric        = TRUE,
                 imperial      = FALSE,
                 maxWidth      = 300,
