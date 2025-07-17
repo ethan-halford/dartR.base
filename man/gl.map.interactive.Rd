@@ -18,6 +18,7 @@ gl.map.interactive(
   palette.links = NULL,
   legend.title = NULL,
   provider = "Esri.NatGeoWorldMap",
+  scale.bar = TRUE,
   raster.image = NULL,
   raster.opacity = 0.5,
   raster.colors = (scales::viridis_pal(option = "D"))(255),
@@ -61,6 +62,8 @@ and 1=no transparency. Defaults to 0.8.}
 [default NULL].}
 
 \item{provider}{Passed to leaflet [default "Esri.NatGeoWorldMap"].}
+
+\item{scale.bar}{Whether to add a scale bar [default TRUE].}
 
 \item{raster.image}{Path to a georeferenced raster image to plot 
 [default NULL].}
