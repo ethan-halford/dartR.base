@@ -1,9 +1,9 @@
 #' @name gl.diagnostics.hwe
-#' @title Provides descriptive stats and plots to diagnose potential problems
+#' @title 
+#' Provides descriptive stats and plots to diagnose potential problems
 #'   with Hardy-Weinberg proportions
-#'   @family matched report
-
-#' @description Different causes may be responsible for lack of Hardy-Weinberg
+#' @description 
+#' Different causes may be responsible for lack of Hardy-Weinberg
 #' proportions. This function helps diagnose potential problems.
 #' 
 #' @inheritParams gl.report.hwe
@@ -51,22 +51,23 @@
 #' computed) and it may take some time for these computations to complete. 
 #' De Meeûs 2018 suggests that under a global significant heterozygosity 
 #' deficit: 
-
+#' 
 #' - if the
 #' correlation between Fis and Fst is strongly positive, and StdErrFis >>
 #' StdErrFst, Null alleles are likely to be the cause. 
-
+#' 
 #' - if the correlation
 #' between Fis and Fst is ~0 or mildly positive, and StdErrFis > StdErrFst,
 #' Wahlund may be the cause. 
-
+#' 
 #' - if the correlation between Fis and Fst is ~0, and
 #' StdErrFis ~ StdErrFst, selfing or sib mating could to be the cause.
-
+#' 
 #'  It is
 #' important to realise that these statistics only suggest a pattern (pointers).
 #' Their absence is not conclusive evidence of the absence of the problem, as 
 #' their presence does not confirm the cause of the problem. 
+#' 
 #' \item A table where the
 #' number of observed and expected significant HWE tests are reported by each
 #' population, indicating whether these are due to heterozygosity excess or
@@ -88,7 +89,8 @@
 #' res <- gl.diagnostics.hwe(x = gl.filter.allna(platypus.gl[,1:50]), 
 #' stdErr=FALSE, n.cores=1)
 #' }
-#' @references \itemize{ 
+#' @references 
+#' \itemize{ 
 #' \item de Meeûs, T., McCoy, K.D., Prugnolle, F.,
 #' Chevillon, C., Durand, P., Hurtrez-Boussès, S., Renaud, F., 2007. Population
 #' genetics and molecular epidemiology or how to “débusquer la bête”. Infection,
@@ -107,7 +109,6 @@
 #'  }
 #'  
 #' @seealso \code{\link{gl.report.hwe}}
-
 #' @rawNamespace import(data.table, except = c(melt,dcast))
 #' @export
 #' @return A list with the table with the summary of the HWE tests and (if 
