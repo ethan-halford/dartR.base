@@ -185,6 +185,7 @@ gl.plot.heatmap <- function(D,
   }
   
   if (datatype == "dist" | datatype == "matrix") {
+    D <- as.dist(D)
     m <- as.matrix(D)
     
     if (!is.null(x) && ncol(m) != nInd(x)) {
