@@ -109,15 +109,29 @@ utils.dist.ind.snp <- function(x,
             row1 <- mat[i,]
             row2 <- mat[j,]
             
-            if (method == "euclidean") {
-              sq <- (row1-row2)**2
-              sq <- sq[!is.na(sq)]
-              L <- length(sq)
-                if(scale==TRUE){
-                    dd[j,i] <- sqrt(sum(sq)/L)
+            # if (method == "euclidean") {
+            #   sq <- (row1-row2)**2
+            #   sq <- sq[!is.na(sq)]
+            #   L <- length(sq)
+            #     if(scale==TRUE){
+            #         dd[j,i] <- sqrt(sum(sq)/L)
+            #     } else {
+            #         dd[j,i] <- sqrt(sum(sq))
+            #     }
+            #   
+
+              if (method == "euclidean") {
+                sq <- (row1 - row2)^2
+                L  <- sum(!is.na(sq))
+                if (L == 0L) { dd[j,i] <- NA_real_; next }        # guard
+                if (scale) {
+                  dd[j,i] <- sqrt(sum(sq, na.rm = TRUE) / L) / 2  # ∈ [0,1]
+                  # equivalently: sqrt(sum(sq, na.rm=TRUE)) / (2*sqrt(L))
                 } else {
-                    dd[j,i] <- sqrt(sum(sq))
+                  dd[j,i] <- sqrt(sum(sq, na.rm = TRUE))
                 }
+              }        
+              
             } else if (method == "simple") {
               row <- array(1,dim=nL)
               row[((row1 + row2) == 4)] <- 2
