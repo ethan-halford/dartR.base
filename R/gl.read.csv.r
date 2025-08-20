@@ -146,10 +146,10 @@ gl.read.csv <- function(filename,
     
     # Validate and convert the SNP data
     
-    test <- paste0(data, collapse = "")
+    test <- paste0(data[1:5,1:5], collapse = "")
     test <- gsub("NA", "9", test)
     test <- gsub(" ", "", test)
-    if (nchar(test) > nrow(data) * ncol(data)) {
+    if (nchar(test) > nrow(data[1:5,1:5]) * ncol(data[1:5,1:5])) {
         if (verbose >= 2) {
             cat(
                 report(
