@@ -13,6 +13,7 @@
 #' @param palette_discrete The color of populations [default NULL].
 #' @param dendrogram Character string indicating whether to draw 'none',
 #' 'row', 'column' or 'both' dendrograms [default "column"].
+#' @param plot.out A boolean that indicates whether to plot the results [default TRUE].
 #' @param legend.print Whether to create legend (only if x is provided) 
 #' [default TRUE].
 #' @param legendx x coordinates for the legend[default 0].
@@ -78,6 +79,7 @@ gl.plot.heatmap <- function(D,
                             palette.divergent = gl.colors("div"),
                             palette_discrete = NULL,
                             dendrogram = "column",
+                            plot.out = TRUE,
                             legend.print = TRUE,
                             legendx = 0,
                             legendy = 0.5,
@@ -293,6 +295,8 @@ gl.plot.heatmap <- function(D,
     cat(report("Completed:", funname, "\n"))
   }
   
+  if(plot.out){
   invisible(p3)
+  }
   
 }
