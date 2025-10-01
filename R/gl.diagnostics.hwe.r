@@ -140,6 +140,17 @@ gl.diagnostics.hwe <- function(x,
   # CHECK DATATYPE
   datatype <- utils.check.datatype(x, verbose = verbose)
   
+  # FUNCTION SPECIFIC ERROR CHECKING check if packages are installed
+  pkg <- "ggtern"
+  if (!(requireNamespace(pkg, quietly = TRUE))) {
+    cat(error(
+      "Package",
+      pkg,
+      " needed for this function to work. Please install it.\n"))
+    return(-1)
+  }
+  
+  
   # DO THE JOB
   # Set NULL to variables to pass CRAN checks
   Prob<-Sig<-N<-Locus<-Population<-Freq<-Data<-dumpop<-Deficiency<-Fis<-
