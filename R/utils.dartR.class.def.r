@@ -433,11 +433,12 @@ rbind.dartR <- function(...) {
     e@gen))
   res <- do.call(new, dots)
   locNames(res) <- locNames(myList[[1]])
-  alleles(res)  <- alleles(myList[[1]])
+  res$loc.all <- myList[[1]]$loc.all
+  # alleles(res)  <- alleles(myList[[1]])
   indNames(res) <- unlist(lapply(myList, indNames))
   pop(res)      <- factor(unlist(lapply(myList, pop)))
   
-  #hierachies are ignored in dart objects here
+  #hierarchies are ignored in dart objects here
   # Hierarchies are tricky. Using dplyr's bind_rows.
   #res <- .rbind_strata(myList, res)
   

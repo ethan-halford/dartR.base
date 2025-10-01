@@ -184,6 +184,7 @@ gl.join <- function(x1,
   }
   
   if (method == 'join.by.loc') {
+    
     # Check that names and loc.metadata are the same and in the same order
     if (!identical(locNames(x1), locNames(x2))) {
       stop(

@@ -482,7 +482,9 @@ gl.pcoa <- function(x,
     #   return(list('struct'=struc,'noise'=noise))
     # }
     
-    bs.statistics <- function(eigenvalues, plot = FALSE, gap_threshold = 2) {
+    bs.statistics <- function(eigenvalues, 
+                              plot = FALSE,
+                              gap_threshold = 2) {
       # Function to separate eigenvalues into "structured" and "noisy" dimensions 
       # using the Broken Stick algorithm (MacArthur, 1957).
       #
@@ -527,7 +529,7 @@ gl.pcoa <- function(x,
       # Handle edge case: No eigenvalues greater than thresholds
       if (length(idx2) == 0) {
         # Return all eigenvalues as "noisy" if no structure is detected
-        return(list(struct = data.frame(), noise = df))
+        return(list(struct = data.frame(eigenvalues = 0), noise = df))
       }
       
       # Identify gaps in structured indices
@@ -540,9 +542,13 @@ gl.pcoa <- function(x,
       }
       
       # Separate structured and noisy eigenvalues based on updated idx
-      struc <- df[idx, ]
-      noise <- df[!idx, ]
-      
+      if(nrow(df[idx, ]) == 0 ){
+        return(list(struct = data.frame(eigenvalues = 0), noise = df))
+      }else{
+        struc <- df[idx, ]
+        noise <- df[!idx, ]
+      }
+
       # Add classification labels to each subset
       struc$structure <- 'structured'
       noise$structure <- 'noisy'
@@ -846,8 +852,8 @@ gl.pcoa <- function(x,
     # Plot Scree plot avoid no visible binding probl
     eigenvalue <- percent <- NULL
     
-    df <-
-        data.frame(eigenvalue = seq(1:length(eig.top.pc)), percent = eig.top.pc)
+    df <- data.frame(eigenvalue = seq(1:length(eig.top.pc)), 
+                     percent = eig.top.pc)
     if (datatype == "SNP") {
         xlab <- paste("PCA Axis")
     } else {

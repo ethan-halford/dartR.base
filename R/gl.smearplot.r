@@ -138,6 +138,10 @@ gl.smearplot <- function(x,
     } else {
       individuals <- seq(1:nInd(x))
     }
+    
+    if(den){ 
+      group.pop <- FALSE
+    }
 
     # DO THE JOB
     if(loc.order){
@@ -162,7 +166,9 @@ gl.smearplot <- function(x,
       hcr <- hclust(distr)
       ddr <- as.dendrogram(hcr)
       ddr <- reorderfun(ddr, TRUE)
-      p_den <- ggdendro::ggdendrogram(ddr,rotate = T)
+      p_den <- ggdendro::ggdendrogram(ddr,rotate = T) +
+        # theme_void() +
+        theme(plot.margin = margin(0, 0, 0, 0))
       rowInd <- order.dendrogram(ddr)
       rowInd_2 <- data.frame(Label=indNames(x)[rowInd])
       rowInd_2$order_d <- 1:nInd(x)
@@ -396,11 +402,6 @@ gl.smearplot <- function(x,
                               dir = "v",
                               scales = "free_y")
     }
-    
-    if(interactive){
-      plott <- plotly::ggplotly(p3)
-      show(plott)
-    }
 
     if(loc.names){
       loc_labels <- locNames(x)
@@ -413,7 +414,12 @@ gl.smearplot <- function(x,
         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
     }
     
-    if(den){
+    if(interactive){
+      p3 <- plotly::ggplotly(p3)
+    }
+    
+    if(den &
+       interactive == FALSE){
       design <-  "AB"
       p3 <- p3 + p_den  + 
         plot_layout(design = design)
@@ -439,5 +445,5 @@ gl.smearplot <- function(x,
     
     # RETURN
     
-    invisible(p3)
+    return(p3)
 }
