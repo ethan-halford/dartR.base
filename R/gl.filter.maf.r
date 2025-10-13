@@ -209,7 +209,7 @@ gl.filter.maf <- function(x,
       coord_cartesian(xlim = c(min, 0.5)) +
       geom_vline(xintercept = threshold,
                  color = "red",
-                 size = 1) +
+                 linewidth = 1) +
       xlab("Pre-filter SNP MAF\nOver all populations") +
       ylab("Count") +
       plot.theme
@@ -227,7 +227,7 @@ gl.filter.maf <- function(x,
       coord_cartesian(xlim = c(min, 0.5)) +
       geom_vline(xintercept = threshold,
                  color = "red",
-                 size = 1) +
+                 linewidth = 1) +
       xlab("Post-filter SNP MAF\nOver all populations") +
       ylab("Count") +
       plot.theme
@@ -252,7 +252,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Pre-filter SNP MAF") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -280,7 +280,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Post-filter SNP MAF\n") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -325,7 +325,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Pre-filter SNP MAF\nOver all populations") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -338,7 +338,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Post-filter SNP MAF\nOver all populations") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -364,7 +364,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Pre-filter SNP MAF\nOver all populations") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -377,7 +377,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Post-filter SNP MAF\nOver all populations") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -403,7 +403,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Pre-filter SNP MAF") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -416,7 +416,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Post-filter SNP MAF") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -440,7 +440,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Pre-filter SNP MAF") +
         ylab("Count") +
         xlim(0, 0.5) +
@@ -453,7 +453,7 @@ gl.filter.maf <- function(x,
                        fill = plot.colors[2]) +
         geom_vline(xintercept = threshold,
                    color = "red",
-                   size = 1) +
+                   linewidth = 1) +
         xlab("Post-filter SNP MAF") +
         ylab("Count") +
         xlim(0, 0.5) +
