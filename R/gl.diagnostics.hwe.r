@@ -183,7 +183,7 @@ gl.diagnostics.hwe <- function(x,
         linetype = "Mean number\nof significant\nHWE tests"
       ),
       col = "red",
-      size = 1
+      linewidth = 1
     ) +
     scale_linetype_manual(name = "", values = 'solid') +
     coord_cartesian(xlim = c(0, 1)) +
@@ -285,7 +285,7 @@ gl.diagnostics.hwe <- function(x,
   p3 <- ggplot(Fstats$perloc, aes(Fst, Fis)) + 
     geom_point(size=2,color=colors.barplot[1],alpha=0.5) + 
     geom_smooth(method = "lm",color=colors.barplot[2],fill=colors.barplot[2],
-                size=1) +
+                linewidth=1) +
     annotate("text", 
              x=min(Fstats$perloc$Fst, na.rm = TRUE) +
                (max(Fstats$perloc$Fst, na.rm = TRUE) - 

@@ -110,7 +110,6 @@ gl.plot.heatmap <- function(D,
                             main = NULL,
                             xlab = NULL,
                             ylab = NULL,
-                            
                             verbose = NULL,
                             ...) {
   
@@ -140,8 +139,6 @@ gl.plot.heatmap <- function(D,
     ))
     return(-1)
   }
-  
-  
   
   # DO THE JOB
   
@@ -195,8 +192,9 @@ gl.plot.heatmap <- function(D,
       legend.print <- FALSE
     }
     
-    if (diag.na)
-      diag(m) <- NA
+    if (diag.na) diag(m) <- NA
+    
+    if (plot.out) {
     
     p3 <-
       utils.heatmap(
@@ -244,6 +242,7 @@ gl.plot.heatmap <- function(D,
         title = legend.title
       )
     }
+    }
   }
   
   if (datatype == "fd") {
@@ -253,9 +252,9 @@ gl.plot.heatmap <- function(D,
       colors_pops <- NULL
     }
     
-    if (diag.na)
-      diag(m) <- NA
+    if (diag.na) diag(m) <- NA
     
+    if (plot.out) {
     p3 <-
       utils.heatmap(
         m,
@@ -287,6 +286,7 @@ gl.plot.heatmap <- function(D,
         ylab = ylab,
         ...
       )
+    }
   }
   
   # FLAG SCRIPT END
@@ -294,9 +294,7 @@ gl.plot.heatmap <- function(D,
   if (verbose > 0) {
     cat(report("Completed:", funname, "\n"))
   }
-  
-  if(plot.out){
+  if (plot.out) {
   invisible(p3)
-  }
-  
+}
 }
