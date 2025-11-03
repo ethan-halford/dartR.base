@@ -72,6 +72,7 @@ In order to ensure that replicated individuals are properly identified, it's
 }
 \examples{
 \donttest{
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 res_rep <- gl.report.replicates(platypus.gl, loc_threshold = 500, 
 perc_geno = 0.85)
 }

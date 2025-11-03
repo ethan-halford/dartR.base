@@ -29,6 +29,7 @@ Not fatal, but should apply this filter before gl.filter.secondaries, for
 obvious reasons.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 result <- gl.filter.overshoot(testset.gl, verbose=3)
 
 }

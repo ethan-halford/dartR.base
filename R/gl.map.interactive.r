@@ -57,8 +57,10 @@
 #' 
 #' @examples
 #' require("dartR.data")
+#' if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 #' gl.map.interactive(bandicoot.gl)
 #' cols <- c("red","blue","yellow")
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' gl.map.interactive(platypus.gl, ind.circle.cols=cols, ind.circle.cex=10, 
 #' ind.circle.transparency=0.5)
 #' 

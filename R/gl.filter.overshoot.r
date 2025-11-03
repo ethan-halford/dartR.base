@@ -25,6 +25,7 @@
 #' \url{https://groups.google.com/d/forum/dartr}
 #' 
 #' @examples
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #' result <- gl.filter.overshoot(testset.gl, verbose=3)
 #' 
 #' @export

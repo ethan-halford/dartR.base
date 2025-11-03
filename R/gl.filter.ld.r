@@ -26,6 +26,7 @@
 #'  
 # @examples
 # \donttest{
+# if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 # test <- bandicoot.gl
 # test <- gl.filter.callrate(test,threshold = 1)
 # res <- gl.report.ld.map(test)

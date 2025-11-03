@@ -43,6 +43,7 @@ calculate a certain quantity for that subset (redo a
 \donttest{
 #bootstrap for 2 possums populations to check effect of sample size on fixed alleles
 gl.set.verbosity(0)
+if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
 pp <- possums.gl[c(1:30,91:120),]
 nrep <- 1:10
 nss <- seq(1,10,2)

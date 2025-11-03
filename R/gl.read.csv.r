@@ -35,6 +35,8 @@
 #' individuals [optional].
 #' @param loc.metafile Name of the csv file containing the metrics for
 #' loci [optional].
+#' @param fbm If TRUE, the genlight object is converted to a file-backed format. 
+#' This is useful for very large datasets. To back convert use: gl.fbm2gen().
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log; 3, progress and results summary; 5, full report
 #' [default 2 or as specified using gl.set.verbosity].
@@ -42,11 +44,10 @@
 #' @author Custodian: Luis Mijangos -- Post to
 #' \url{https://groups.google.com/d/forum/dartr}
 #' 
-# @examples
-#Taken out, will not build
-# csv_file <- system.file('extdata','platy_test.csv', package='dartR.data')
-# ind_metadata <- system.file('extdata','platy_ind.csv', package='dartR.data')
-# gl  <- gl.read.csv(filename = csv_file, ind.metafile = ind_metadata)
+#' @examples
+#' csv_file <- system.file('extdata','platy_test.csv', package='dartR.data')
+#' ind_metadata <- system.file('extdata','platy_ind.csv', package='dartR.data')
+#' gl  <- gl.read.csv(filename = csv_file, ind.metafile = ind_metadata)
 #' 
 #' @export
 #' @return A genlight object with the SNP data and associated metadata included.
@@ -55,6 +56,7 @@ gl.read.csv <- function(filename,
                         transpose = FALSE,
                         ind.metafile = NULL,
                         loc.metafile = NULL,
+                        fbm = FALSE,
                         verbose = NULL) {
     # SET VERBOSITY
     verbose <- gl.check.verbosity(verbose)
@@ -69,7 +71,7 @@ gl.read.csv <- function(filename,
     
     if (is.null(loc.metafile) & verbose > 0) {
         cat(
-            warn(
+            report(
                 "Warning: Locus metafile not provided, locus metrics will be
         calculated where this is possible\n"
             )
@@ -78,7 +80,7 @@ gl.read.csv <- function(filename,
     
     if (is.null(ind.metafile) & verbose > 0) {
         cat(
-            warn(
+            report(
                 "Warning: Individual metafile not provided, pop set to 'A' for all individuals\n"
             )
         )
@@ -361,11 +363,24 @@ gl.read.csv <- function(filename,
     gl@other$history <- list()
     gl@other$history[[1]] <- match.call()
     
+    
+    #convert to fbm 
+    if (fbm) {}
+      gl <- gl.gen2fbm(gl, verbose = verbose) 
+      if (verbose>2) {
+        cat(report(" Created an  file-backed matrix (fbm) dartR object\n"))
+      } else gl@fbm <- NULL
+    
+    
+    
     # FLAG SCRIPT END
     
     if (verbose > 0) {
         cat(report("Completed:", funname, "\n"))
     }
+    
+    
+    
     
     return(gl)
     

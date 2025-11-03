@@ -235,11 +235,10 @@ When using bootstrap methods to estimate confidence intervals for rarefied
   indicate an error but can reflect genuine asymmetry in the data.
 }
 \examples{
-\donttest{
   # Example usage:
+  if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
   results <- gl.report.allelerich(possums.gl)
   print(results)
-}
 
 }
 \references{

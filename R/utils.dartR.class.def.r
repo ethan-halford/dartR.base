@@ -14,13 +14,49 @@ setClassUnion("FBMcode256_or_NULL", c("NULL", "FBM.code256"))
 
 ## returns NULL if the 'fbm' slot is missing OR is NULL
 .fbm_or_null <- function(x) {
-  tryCatch(methods::slot(x, "fbm"), error = function(e) NULL)
+    if (methods::.hasSlot(x, "fbm")) {
+    val <- methods::slot(x, "fbm")
+    return(if (is.null(val)) NULL else val)
+  }
+  NULL
 }
 
-.has_fbm <- function(x) {
-  fbm <- .fbm_or_null(x)
-  !is.null(fbm)
+.has_fbm <- function(x) !is.null(.fbm_or_null(x))
+
+fbm_or_gen <- function(x) {
+  # early guard: must be an S4 object
+  
+  fbm_present <- methods::.hasSlot(x, "fbm")
+  gen_present <- methods::.hasSlot(x, "gen")
+  
+  fbm_nonempty <- FALSE
+  gen_nonempty <- FALSE
+  
+  if (fbm_present) {
+    fbm_val <- tryCatch(methods::slot(x, "fbm"), error = function(e) NULL)
+    fbm_nonempty <- !is.null(fbm_val)
+  }
+  
+  if (gen_present) {
+    gen_val <- tryCatch(methods::slot(x, "gen"), error = function(e) NULL)
+    # gen is usually a list; consider it empty if length==0
+    gen_nonempty <- !(is.list(gen_val) && length(gen_val) == 0L)
+  }
+  
+  if (fbm_nonempty && !gen_nonempty) return("fbm")
+  if (gen_nonempty && !fbm_nonempty) return("gen")
+  
+  # if both non-empty, that violates the XOR rule
+  if (fbm_nonempty && gen_nonempty) {
+    stop("Both @fbm and @gen are populated - invalid object.")
+  }
+  
+  # if neither non-empty, report the missing situation clearly
+  stop("Neither @fbm nor @gen slot found or populated in object.")
 }
+
+
+
 
 
 
@@ -34,7 +70,7 @@ setClass("dartR",
          prototype = prototype(fbm = NULL), #, seqpostion = NULL),
          validity = function(object) {
            fbm     <- .fbm_or_null(object)
-           has_fbm <- !is.null(object@fbm)
+           has_fbm <- !is.null(fbm)
            has_gen <- length(object@gen) > 0L
            
            ## Enforce XOR: exactly one populated
@@ -52,7 +88,7 @@ setClass("dartR",
                return("length(@ind.names) must match nrow(@fbm).")
              if (length(object@loc.names) > 0 && length(object@loc.names) != dm[2])
                return("length(@loc.names) must match ncol(@fbm).")
-           }
+           } 
            
            TRUE
          }
@@ -123,7 +159,6 @@ setMethod ("show", "dartR", function(object) {
           sep = "")
     }
   }
-  
   
   ## BASIC CONTENT
   cat("\n\n ** Genetic data")
@@ -325,7 +360,7 @@ setMethod("[", signature(x = "dartR", i = "ANY", j = "ANY", drop = "ANY"),
               i <- .get_pop_inds(x, pop)  # returns integer indices
             }
             
-            ## Character j → match locus names
+            ## Character j = match locus names
             if (is.character(j)) {
               j <- match(j, x@loc.names, nomatch = 0L)
             }
@@ -334,13 +369,25 @@ setMethod("[", signature(x = "dartR", i = "ANY", j = "ANY", drop = "ANY"),
             ii <- if (is.logical(i)) which(i) else i
             jj <- if (is.logical(j)) which(j) else j
             
+            if (length(ii)==0 ) {
+              stop(error("Subsetting resulted in zero individuals."))
+            
+            }
+            if (length(jj)==0 ) {
+              stop(error("Subsetting resulted in zero loci."))
+            
+            }
+            
+          
+          
             ## -------- FBM-backed branch --------
             fbm <- .fbm_or_null(x)
             if (!is.null(fbm)) {
               # Subset FBM first (keeps XOR: @gen remains empty)
               #x@fbm <- .fbmsub_copy(x@fbm, ii, jj, code = x@fbm$code256)
-              dummyG <-bigstatsr::big_copy(x@fbm, ind.row = ii, ind.col = jj, backingfile = tempfile("geno_"))
-              x@fbm <- dummyG
+              
+                dummyG <-bigstatsr::big_copy(x@fbm, ind.row = ii, ind.col = jj, backingfile = tempfile("geno_"))
+                x@fbm <- dummyG
               #unlink temp file
               #bigstatsr::big_unlink(dummyG)
               
@@ -443,6 +490,7 @@ setMethod("[", signature(x = "dartR", i = "ANY", j = "ANY", drop = "ANY"),
             
             if (!is.null(x@other$loc.metrics))
               x@other$loc.metrics <- x@other$loc.metrics[jj, , drop = FALSE]
+            if (!.has_fbm(x)) x@fbm <- NULL
             
             x
           })
@@ -462,6 +510,7 @@ setMethod("[", signature(x = "dartR", i = "ANY", j = "ANY", drop = "ANY"),
 #' @param backingfile prefix for the backing file of the resulting FBM
 #' @param code code mapping to use for the resulting FBM=CODE_012; if NULL, inherits from the first FBM input
 #' @param chunk number of columns to process in a block when copying from FBMs
+#' @param quiet suppress warnings. default: TRUE
 #' @examples
 #' t1 <- platypus.gl
 #' class(t1) <- "dartR"
@@ -515,7 +564,7 @@ cbind.dartR <- function(...,
   }
   strata_out <- objs[[1L]]@strata
   
-  ## --- PATH 1: FBM present in at least one input → build a new FBM target ----
+  ## --- PATH 1: FBM present in at least one input = build a new FBM target ----
   if (any_fbm) {
     total_p <- sum(sapply(objs, nLoc))
     
@@ -612,7 +661,7 @@ cbind.dartR <- function(...,
     return(out)
   }
   
-  ## --- PATH 2: No FBM at all → fall back to original SNPbin-based cbind ----
+  ## --- PATH 2: No FBM at all = fall back to original SNPbin-based cbind ----
   myList <- objs
   
   ## (This part mirrors your original implementation)
@@ -678,6 +727,7 @@ cbind.dartR <- function(...,
 #' @param backingfile prefix for the backing file of the resulting FBM
 #' @param code code mapping to use for the resulting FBM=CODE_012; if NULL, inherits from the first FBM input
 #' @param chunk number of columns to process in a block when copying from FBMs
+#' @param quiet suppress warnings. default: TRUE
 #' @examples
 #' t1 <- platypus.gl
 #' class(t1) <- "dartR"
@@ -847,6 +897,7 @@ rbind.dartR <- function(...,
                         position   = pos_out,
                         loc.all    = alleles_out
     )
+    if (!.has_fbm(out)) out@fbm <- NULL
     methods::validObject(out)
     return(out)
   }
@@ -868,6 +919,7 @@ rbind.dartR <- function(...,
   out@chromosome <- chr(myList[[1L]])
   out@position   <- position(myList[[1L]])
   ploidy(out)    <- ploidy_out
+  if (!.has_fbm(out)) out@fbm <- NULL
   methods::validObject(out)
   out
 }
@@ -925,14 +977,94 @@ setMethod("as.matrix", "dartR", function(x, ...) {
 })
 # 3) Also register an explicit coercion (used by some internals)
 methods::setAs("dartR", "matrix", function(from) {
-  if (!is.null(from@fbm)) return(from@fbm[])
+  if (!is.null(.fbm_or_null(from))) return(from@fbm[])
   methods::as(methods::as(from, "genlight"), "matrix")
+})
+
+############glSum############################################################################
+
+## Ensure the generic exists (adegenet defines it; this is safe if already present)
+if (!methods::isGeneric("glSum")) {
+  methods::setGeneric("glSum", function(x, alleleAsUnit = TRUE, useC=FALSE) standardGeneric("glSum"))
+}
+
+
+
+## ---- FBM-aware glSum for dartR ----
+setMethod("glSum", signature(x = "dartR"), function(x, alleleAsUnit = TRUE, useC=FALSE)  {
+  fbm <- .fbm_or_null(x)
+  ## If no FBM (old object or genlight mode), delegate to next method (genlight)
+  if (is.null(fbm)) return(callNextMethod())
+  
+  if (alleleAsUnit) {
+    res <- integer(nLoc(x))
+    for (e in 1:nInd(x)) {
+      temp <- as.integer(x@fbm[e,])
+      temp[is.na(temp)] <- 0L
+      res <- res + temp
+    }
+  }
+  else {
+    res <- numeric(nLoc(x))
+    myPloidy <- ploidy(x)
+    for (i in 1:nInd(x)) {
+      temp <- as.integer(x@fbm[i,])/myPloidy[i]
+      temp[is.na(temp)] <- 0
+      res <- res + temp
+    }
+  }
+
+  names(res) <- locNames(x)
+  return(res)
 })
 
 
 
+setMethod("glNA", signature(x = "dartR"), function(x, alleleAsUnit = TRUE)  {
+  fbm <- .fbm_or_null(x)
+  ## If no FBM (old object or genlight mode), delegate to next method (genlight)
+  if (is.null(fbm)) return(callNextMethod())
+  res <- integer(nLoc(x))
+  temp <- NA.posi(x)
+  if (alleleAsUnit) {
+    for (i in 1:length(temp)) {
+      if (length(temp[[i]]) > 0) {
+        res[temp[[i]]] <- res[temp[[i]]] + ploidy(x)[i]
+      }
+    }
+  }
+  else {
+    for (e in temp) {
+      if (length(e) > 0) {
+        res[e] <- res[e] + 1
+      }
+    }
+  }
+  names(res) <- locNames(x)
+  return(res)
+})
+
+#' glMean function for dartR object
+#' 
+#' @param x a dartR object 
+#' @param alleleAsUnit logical; if TRUE, the mean is calculated per allele,
+#' if FALSE, per individual
+#' @return A numeric vector of means per locus
+#' @export
+glMean <- function(x, alleleAsUnit = TRUE) {
+  if (alleleAsUnit) {
+    N <- sum(ploidy(x)) - glNA(x, alleleAsUnit = TRUE)
+    res <- glSum(x, alleleAsUnit = TRUE)/N
+  } else {
+    N <- nInd(x) - glNA(x, alleleAsUnit = FALSE)
+    res <- glSum(x, alleleAsUnit = FALSE)/N
+  }
+  names(res) <- locNames(x)
+  return(res)
+}
 
 
+#############NA.posi###########################################################################
 ## Ensure the generic exists (adegenet defines it; this is safe if already present)
 if (!methods::isGeneric("NA.posi")) {
   methods::setGeneric("NA.posi", function(x, ...) standardGeneric("NA.posi"))
@@ -940,7 +1072,7 @@ if (!methods::isGeneric("NA.posi")) {
 
 ## ---- FBM-aware NA.posi for dartR ----
 ## Returns a list (length = nInd) of integer vectors with locus indices of missing genotypes,
-## just like adegenet’s NA.posi(genlight).
+## just like adegenet's NA.posi(genlight).
 setMethod("NA.posi", signature(x = "dartR"), function(x, ...) {
   fbm <- .fbm_or_null(x)
   ## If no FBM (old object or genlight mode), delegate to next method (genlight)
@@ -970,7 +1102,7 @@ setMethod("NA.posi", signature(x = "dartR"), function(x, ...) {
     }
   }
 
-  ## Ensure integer vectors (empty → integer())
+  ## Ensure integer vectors (empty = integer())
   res <- lapply(res, function(v) if (length(v)) as.integer(v) else integer())
   res
 })

@@ -43,6 +43,7 @@ Note: One and only one of gl.check, fd.check, dist.check or mat.check can be
  TRUE.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 datatype <- utils.check.datatype(testset.gl)
 datatype <- utils.check.datatype(as.matrix(testset.gl),accept='matrix')
 fd <- gl.fixed.diff(testset.gl)

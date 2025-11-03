@@ -20,6 +20,8 @@
 \item{code}{code mapping to use for the resulting FBM=CODE_012; if NULL, inherits from the first FBM input}
 
 \item{chunk}{number of columns to process in a block when copying from FBMs}
+
+\item{quiet}{suppress warnings. default: TRUE}
 }
 \value{
 A genlight object

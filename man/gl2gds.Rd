@@ -67,6 +67,7 @@ the function \link[SNPRelate]{snpgdsClose} (package SNPRelate).
 \examples{
 \donttest{
 require("dartR.data")
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl2gds(platypus.gl,snp.pos='ChromPos_Platypus_Chrom_NCBIv1',
 snp.chr = 'Chrom_Platypus_Chrom_NCBIv1', outpath=tempdir())
 }

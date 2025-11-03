@@ -84,6 +84,7 @@ Variant identifier is taken from locNames(x)
 \dontrun{
 # this example needs plink installed to work
 require("dartR.data")
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl2vcf(platypus.gl,snp.pos='ChromPos_Platypus_Chrom_NCBIv1',
  snp.chr = 'Chrom_Platypus_Chrom_NCBIv1')
 }

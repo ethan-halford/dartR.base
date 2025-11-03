@@ -30,6 +30,7 @@ recognised by treemix. Plotting functions provided with treemix will need to
  be sourced from the treemix download page.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 gl2treemix(testset.gl, outpath=tempdir())
 
 }

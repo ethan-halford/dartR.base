@@ -32,6 +32,7 @@ Note that the original population assignments are lost.
 }
 \examples{
 # SNP data
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
    popNames(testset.gl)
    gl <- gl.reassign.pop(testset.gl, as.pop='sex',verbose=3)
    popNames(gl)

@@ -102,6 +102,7 @@ If you like to use chromosome information when converting to plink format and
 \examples{
 \donttest{
 require("dartR.data")
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 test <- platypus.gl
 # assigning SNP position
 test$position <- test$other$loc.metrics$ChromPos_Platypus_Chrom_NCBIv1

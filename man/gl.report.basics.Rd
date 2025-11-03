@@ -17,6 +17,7 @@ progress log; 3, progress and results summary; 5, full report
 Calculates basic statistics for a genlight object.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl.report.basics(platypus.gl)
 
 }

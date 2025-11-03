@@ -85,8 +85,9 @@
 #' @examples
 #' \donttest{
 #' require("dartR.data")
-#' res <- gl.diagnostics.hwe(x = gl.filter.allna(platypus.gl[,1:50]), 
-#' stdErr=FALSE, n.cores=1)
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
+#' gl <- gl.filter.allna(platypus.gl[,1:50])
+#' res <- gl.diagnostics.hwe(x = gl ,  stdErr=FALSE, n.cores=1)
 #' }
 #' @references \itemize{ 
 #' \item de Meeûs, T., McCoy, K.D., Prugnolle, F.,
@@ -160,7 +161,8 @@ gl.diagnostics.hwe <- function(x,
   suppressWarnings(hweout <- gl.report.hwe(x, 
                                            sig_only = FALSE,
                                            verbose = 0))
-  
+  #no ggtern installed
+  if (hweout==-1) return(NULL)
   p1 <-   ggplot(hweout, aes(Prob)) +
     geom_histogram(bins = bins,
                    color = colors.hist[1],

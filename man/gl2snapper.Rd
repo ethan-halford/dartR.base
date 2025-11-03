@@ -123,6 +123,7 @@ gl2snapper does not work with SilicoDArT data.
 }
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 x <- gl.filter.monomorphs(testset.gl)
 gl2snapper(x, outfile="test.nex", outpath=tempdir())
 

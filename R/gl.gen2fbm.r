@@ -48,11 +48,14 @@ gl.gen2fbm <- function(x,
     stop("Only SNP data supported at this time.")
   }
   
-  ## If FBM already present and gen is empty, nothing to do
-  .fbm_or_null <- function(x) {
-    tryCatch(methods::slot(x, "fbm"), error = function(e) NULL)
-  }
-  
+  ## returns NULL if the 'fbm' slot is missing OR is NULL
+ # .fbm_or_null <- function(x) {
+  #  if (methods::.hasSlot(x, "fbm")) {
+  #    val <- methods::slot(x, "fbm")
+  #    return(if (is.null(val)) NULL else val)
+  #  }
+  #  NULL
+#  }
   fbm <- .fbm_or_null(x)
   if (!is.null(fbm) && length(x@gen) == 0L) {
     if (verbose>2) message("Object already FBM-backed; returning as-is.")

@@ -118,8 +118,9 @@ series of tests conducted (De Meeûs et al 2009).
 \examples{
 \donttest{
 require("dartR.data")
-res <- gl.diagnostics.hwe(x = gl.filter.allna(platypus.gl[,1:50]), 
-stdErr=FALSE, n.cores=1)
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
+gl <- gl.filter.allna(platypus.gl[,1:50])
+res <- gl.diagnostics.hwe(x = gl ,  stdErr=FALSE, n.cores=1)
 }
 }
 \references{

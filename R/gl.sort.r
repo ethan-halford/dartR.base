@@ -27,6 +27,7 @@
 #'
 #'@examples 
 #'#sort by populations
+#'if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 #'bc <- gl.sort(bandicoot.gl)
 #'#sort from West to East
 #'bc2 <- gl.sort(bandicoot.gl, sort.by="pop" ,

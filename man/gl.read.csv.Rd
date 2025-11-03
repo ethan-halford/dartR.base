@@ -9,6 +9,7 @@ gl.read.csv(
   transpose = FALSE,
   ind.metafile = NULL,
   loc.metafile = NULL,
+  fbm = FALSE,
   verbose = NULL
 )
 }
@@ -23,6 +24,9 @@ individuals [optional].}
 
 \item{loc.metafile}{Name of the csv file containing the metrics for
 loci [optional].}
+
+\item{fbm}{If TRUE, the genlight object is converted to a file-backed format. 
+This is useful for very large datasets. To back convert use: gl.fbm2gen().}
 
 \item{verbose}{Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 progress log; 3, progress and results summary; 5, full report
@@ -51,6 +55,12 @@ provided with the SNP data and in the same order.
 Note that the locus metadata will be complemented by calculable statistics
 corresponding to those that would be provided by Diversity Arrays Technology
 (e.g. CallRate).
+}
+\examples{
+csv_file <- system.file('extdata','platy_test.csv', package='dartR.data')
+ind_metadata <- system.file('extdata','platy_ind.csv', package='dartR.data')
+gl  <- gl.read.csv(filename = csv_file, ind.metafile = ind_metadata)
+
 }
 \seealso{
 Other io: 

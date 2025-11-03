@@ -8,11 +8,12 @@
 #' @author Bernd Gruber (bugs? Post to
 #'  \url{https://groups.google.com/d/forum/dartr})
 #' @examples
+#' 
+#' #test fbm
+#' if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
 #' #for the first 10 loci only
-#' #Deprecated:
 #' gl.alf(possums.gl[,1:10])
 #' barplot(t(as.matrix(gl.alf(possums.gl[,1:10]))))
-#' #Current:
 #' gl.allele.freq(possums.gl[,1:10],simple=TRUE)
 #' barplot(t(as.matrix(gl.allele.freq(possums.gl[,1:10],simple=TRUE))))
 #' @export

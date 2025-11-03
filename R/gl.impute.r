@@ -60,15 +60,16 @@
 #'  \donttest{
 #' require("dartR.data")
 #' # SNP genotype data
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' gl <- gl.filter.callrate(platypus.gl,threshold=0.95)
 #' gl <- gl.filter.allna(gl)
-#' gl <- gl.impute(gl,method="neighbour")
+#' gl <- gl.impute(gl, method="frequency") 
 #' # Sequence Tag presence-absence data
 #' gs <- gl.filter.callrate(testset.gs,threshold=0.95)
 #' gl <- gl.filter.allna(gl)
 #' gs <- gl.impute(gs, method="neighbour")
 #' }
-#' gs <- gl.impute(platypus.gl,method ="random")
+#' gl <- gl.impute(platypus.gl,method ="random")
 #' 
 #' @export
 #' @return A genlight object with the missing data imputed.
@@ -100,7 +101,9 @@ gl.impute <-  function(x,
     }
   
   # DO THE JOB
+  #check type
   
+  fbm <- .fbm_or_null(x)
   #separating populations
   
   if (method == "frequency" | method == "HW") {
@@ -143,7 +146,8 @@ gl.impute <-  function(x,
 pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
             return(as.numeric(s_alleles(q_freq = x)))
           })))
-        y@gen <- matrix2gen(pop_matrix, parallel = parallel)
+        
+        if (is.null(fbm)) y@gen <- matrix2gen(pop_matrix, parallel = parallel) else y@fbm[] <-pop_matrix
         pop_list <- c(pop_list, y)
       }
       
@@ -177,7 +181,8 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
           unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
             return(sample_genotype(q_freq = x))
           })))
-        y@gen <- matrix2gen(pop_matrix, parallel = parallel)
+        
+        if(is.null(fbm)) y@gen <- matrix2gen(pop_matrix, parallel = parallel) else y@fbm[] <-pop_matrix
         pop_list <- c(pop_list, y)
       }
     }
@@ -270,8 +275,7 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
       }
       
     }
-    
-    x3@gen <- matrix2gen(x_matrix, parallel = parallel)
+    if (is.null(fbm)) x3@gen <- matrix2gen(x_matrix, parallel = parallel) else x3@fbm[] <-x_matrix
     
   }
   
@@ -309,7 +313,8 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
     x_matrix <- as.matrix(x)
     loc_na <- which(is.na(x_matrix), arr.ind = TRUE)
     x_matrix[loc_na] <- sample(c(0:2),size=nrow(loc_na),replace = TRUE)
-    x3@gen <- matrix2gen(x_matrix, parallel = parallel)
+    
+    if (is.null(fbm)) x3@gen <- matrix2gen(x_matrix, parallel = parallel) else x3@fbm[] <-x_matrix
     
   }
   
@@ -321,7 +326,7 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
     pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
       return(as.numeric(s_alleles(q_freq = x)))
     })))
-    x3@gen <- matrix2gen(pop_matrix, parallel = parallel)
+    if (is.null(fbm)) x3@gen <- matrix2gen(pop_matrix, parallel = parallel) else x3@fbm[] <-pop_matrix
 
     if(verbose>=2){
     cat(report("  Residual missing values were filled randomly drawing from the global allele profiles by locus\n"))

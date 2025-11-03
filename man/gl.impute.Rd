@@ -71,15 +71,16 @@ for particular individuals using 'neighbour'. Consider using the function
  \donttest{
 require("dartR.data")
 # SNP genotype data
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl <- gl.filter.callrate(platypus.gl,threshold=0.95)
 gl <- gl.filter.allna(gl)
-gl <- gl.impute(gl,method="neighbour")
+gl <- gl.impute(gl, method="frequency") 
 # Sequence Tag presence-absence data
 gs <- gl.filter.callrate(testset.gs,threshold=0.95)
 gl <- gl.filter.allna(gl)
 gs <- gl.impute(gs, method="neighbour")
 }
-gs <- gl.impute(platypus.gl,method ="random")
+gl <- gl.impute(platypus.gl,method ="random")
 
 }
 \seealso{

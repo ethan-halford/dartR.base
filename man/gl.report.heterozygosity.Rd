@@ -330,6 +330,7 @@ n.inv <- gl.report.secondaries(platypus.gl)
 gl.report.heterozygosity(platypus.gl, n.invariant = n.inv[7, 2])
 gl.report.heterozygosity(platypus.gl, subsample.pop = TRUE)
 }
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 df <- gl.report.heterozygosity(platypus.gl)
 }
 \references{

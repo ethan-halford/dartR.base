@@ -57,10 +57,9 @@
 #' \url{https://groups.google.com/d/forum/dartr}
 
 #' @examples
-#'  \donttest{
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #' gl.report.hamming(testset.gl[,1:100])
 #' gl.report.hamming(testset.gs[,1:100])
-#' }
 
 #' #' # SNP data
 #' test <- platypus.gl

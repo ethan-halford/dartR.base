@@ -220,11 +220,10 @@
 #' @importFrom dplyr group_by select summarise distinct
 #'
 #' @examples
-#' \donttest{
 #'   # Example usage:
+#'   if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
 #'   results <- gl.report.allelerich(possums.gl)
 #'   print(results)
-#' }
 #'
 
 gl.report.allelerich <- function(x,
