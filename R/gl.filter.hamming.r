@@ -213,7 +213,7 @@ gl.filter.hamming <- function(x,
             coord_cartesian(xlim = c(0, max)) +
             geom_vline(xintercept = threshold,
                        color = "red",
-                       size = 1) + 
+                       linewidth = 1) + 
             xlab(xlabel) + 
             ylab("Count") + 
             plot.theme
@@ -236,7 +236,7 @@ gl.filter.hamming <- function(x,
                            color = plot.colors[1],
                            fill = plot.colors[2]) + 
             coord_cartesian(xlim = c(0, max)) + 
-            geom_vline(xintercept = threshold,color = "red", size = 1) + 
+            geom_vline(xintercept = threshold,color = "red", linewidth = 1) + 
             xlab(xlabel) +
             ylab("Count") + 
             plot.theme

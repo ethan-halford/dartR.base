@@ -210,7 +210,7 @@ gl.report.hamming <- function(x,
     p1 <-
         ggplot(as.data.frame(d), aes(y = d)) +
       geom_boxplot(color = plot.colors[1], fill = plot.colors[2]) + 
-      geom_hline(yintercept = tld,color = "red", size = 1) + 
+      geom_hline(yintercept = tld,color = "red", linewidth = 1) + 
       coord_flip() + 
       plot.theme + 
       xlim(range = c(-1, 1)) + 
@@ -223,7 +223,7 @@ gl.report.hamming <- function(x,
     p2 <-
         ggplot(as.data.frame(d), aes(x = d)) + 
       geom_histogram(bins = 50, color = plot.colors[1],fill = plot.colors[2]) +
-      geom_vline(xintercept = tld,color = "red",size = 1) + 
+      geom_vline(xintercept = tld,color = "red",linewidth = 1) + 
       coord_cartesian(xlim = c(0, 1)) +
       xlab("Hamming distance") +
       ylab("Count") + 

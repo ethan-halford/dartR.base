@@ -148,8 +148,8 @@ gl.filter.rdepth <-  function(x,
                            color = plot.colors[1],
                            fill = plot.colors[2]) + 
             coord_cartesian(xlim = c(0, max)) + 
-            geom_vline(xintercept = lower, color = "red", size = 1) +
-            geom_vline(xintercept = upper, color = "red", size = 1) + 
+            geom_vline(xintercept = lower, color = "red", linewidth = 1) +
+            geom_vline(xintercept = upper, color = "red", linewidth = 1) + 
             xlab(xlabel) +
             ylab("Count") + 
             plot.theme
@@ -174,8 +174,8 @@ gl.filter.rdepth <-  function(x,
                            color = plot.colors[1],
                            fill = plot.colors[2]) +
             coord_cartesian(xlim = c(0, max)) +
-            geom_vline(xintercept = lower, color = "red",size = 1) + 
-            geom_vline(xintercept = upper,color = "red",size = 1) + 
+            geom_vline(xintercept = lower, color = "red",linewidth = 1) + 
+            geom_vline(xintercept = upper,color = "red",linewidth = 1) + 
             xlab(xlabel) +
             ylab("Count") +
             plot.theme
