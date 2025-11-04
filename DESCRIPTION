@@ -1,8 +1,8 @@
 Package: dartR.base
 Type: Package
 Title: Analysing 'SNP' and 'Silicodart' Data - Basic Functions
-Version: 1.1.0
-Date: 2025-09-29
+Version: 1.1.1
+Date: 2025-11-04
 Authors@R: c(
             person("Bernd", "Gruber", email="bernd.gruber@canberra.edu.au", role=c("aut","cre")), 
             person("Arthur", "Georges", email="georges@aerg.edu.au", role="aut"),
@@ -36,8 +36,7 @@ Depends: R (>= 3.5), adegenet (>= 2.0.0), ggplot2, dplyr, dartR.data
 biocViews:
 Imports: ape,crayon,data.table,foreach,gridExtra,methods,patchwork,plyr,
          reshape2,SNPRelate,StAMPP,stats,stringr,tidyr,utils,MASS,SNPassoc,
-         snpStats, raster, bigstatsr, bigsnpr
-         snpStats,gtools
+         snpStats, raster, bigstatsr, bigsnpr, snpStats,gtools
 Suggests: 
     boot,
     devtools,
