@@ -10,6 +10,7 @@ gl.read.PLINK(
   loc.metafile = NULL,
   plink.cmd = "plink",
   plink.path = "path",
+  fbm = FALSE,
   plink.flags = NULL,
   verbose = NULL
 )
@@ -30,6 +31,12 @@ loci [optional].}
 \item{plink.path}{The path where the executable is. If plink is listed in
 the PATH then there is no need for this. This is what the option "path"
 means}
+
+\item{fbm}{Logical. If TRUE, the returned genlight object will contain a
+file-backed matrix (fbm) in its @genome slot. This is useful for very
+large datasets that do not fit into RAM. Note that using fbm objects
+requires the package bigsnpr to be installed. [default FALSE]. to back convert
+use \code{gl.fbm2gen()}.}
 
 \item{plink.flags}{additional possible parameters passed on to plink.}
 

@@ -56,6 +56,7 @@
 #' from a small number of individuals. Genetics, 89(3), 583-590.
 #' 
 #' @examples
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' out <- gl.test.heterozygosity(platypus.gl, nreps=1, verbose=3, plot.out=TRUE)
 #' @family Genetic variation within populations
 #' @import patchwork

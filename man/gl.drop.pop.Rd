@@ -45,6 +45,7 @@ containing SNP genotypes and Tag P/A data (SilicoDArT).
 }
 \examples{
  # SNP data
+ if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
    gl2 <- gl.drop.pop(testset.gl,
    pop.list=c('EmsubRopeMata','EmvicVictJasp'),verbose=3)
    gl2 <- gl.drop.pop(testset.gl, pop.list=c('EmsubRopeMata','EmvicVictJasp'),

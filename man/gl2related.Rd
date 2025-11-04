@@ -44,6 +44,7 @@ therefore for comparisons between coancestry and related we suggest to use
 the command line version of coancestry.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 gtd <- gl2related(bandicoot.gl[1:10,1:20], save=FALSE, )
 \dontrun{
 ##running with the related package, use

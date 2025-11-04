@@ -38,6 +38,7 @@ The function converts a genlight object (SNP or presence/absence
 }
 \examples{
 # SNP data
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 t1 <- platypus.gl
 # assigning chromosomet1
 t1$chromosome <- t1$other$loc.metrics$Chrom_Platypus_Chrom_NCBIv1

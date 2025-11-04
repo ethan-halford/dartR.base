@@ -30,8 +30,10 @@
 #' \donttest{
 #' require("dartR.data")
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
 #' geno <- gl2genepop(possums.gl[1:3,1:9], outpath = tempdir())
 #' head(geno)
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' test <- gl.filter.callrate(platypus.gl,threshold = 1)
 #' popNames(test)
 #' gl2genepop(test, pop.order = c("TENTERFIELD","SEVERN_ABOVE","SEVERN_BELOW"),

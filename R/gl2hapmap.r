@@ -39,6 +39,7 @@
 #' \donttest{
 #' require("dartR.data")
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' gl2hapmap(platypus.gl, outpath = tempdir())
 #' }
 #'

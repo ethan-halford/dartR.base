@@ -11,6 +11,9 @@
 #'@param ind.metafile File that contains additional information on individuals
 #' [required].
 #'@param covfilename Deprecated, sse ind.metafile parameter [NULL].
+#'@param fbm If TRUE, the genlight object will be converted to a filebacked large matrix format, which is faster if
+#' the dataset is large [default FALSE, because still in a testing phase].
+#' If you want to back convert use \code{\link{gl.gen2fbm}} and \code{\link{gl.fbm2gen}}.
 #'@param nas A character specifying NAs [default '-'].
 #'@param topskip A number specifying the number of initial rows to be skipped
 #' [default NULL].
@@ -53,6 +56,7 @@
 #' dartfile <- system.file('extdata','testset_SNPs_2Row.csv', package='dartR.data')
 #' metadata <- system.file('extdata','testset_metadata.csv', package='dartR.data')
 #' gl <- gl.read.dart(dartfile, ind.metafile = metadata, probar=TRUE)
+#' gl <- gl.read.dart(dartfile, ind.metafile = metadata, fbm=TRUE)
 
 #'@seealso \code{\link{utils.read.dart}}
 #'
@@ -65,6 +69,7 @@
 
 gl.read.dart <- function(filename,
                          ind.metafile = NULL,
+                         fbm = FALSE,
                          recalc = TRUE,
                          mono.rm = FALSE,
                          nas = "-",
@@ -281,6 +286,13 @@ gl.read.dart <- function(filename,
         cat(report(paste("Completed:", funname, "\n")))
     }
     # End Block -----------------
+    
+    #convert to fbm 
+    if (fbm) {
+    glout <- gl.gen2fbm(glout, verbose = verbose) 
+    if (verbose>2) {
+      cat(report(" Created an  file-backed matrix (fbm) dartR object\n"))
+    }} else glout@fbm <- NULL
     
     return(glout)
 }

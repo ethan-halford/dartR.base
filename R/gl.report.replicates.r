@@ -46,6 +46,7 @@
 #' \url{https://groups.google.com/d/forum/dartr}
 #' @examples
 #' \donttest{
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' res_rep <- gl.report.replicates(platypus.gl, loc_threshold = 500, 
 #' perc_geno = 0.85)
 #' }

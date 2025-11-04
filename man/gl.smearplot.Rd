@@ -80,6 +80,7 @@ it is best to use ind.labels = FALSE.
 Works with both SNP data and P/A data (SilicoDArT)
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 gl.smearplot(testset.gl,ind.labels=FALSE)
 gl.smearplot(testset.gs,ind.labels=FALSE)
 gl.smearplot(testset.gl[1:10,],ind.labels=TRUE)

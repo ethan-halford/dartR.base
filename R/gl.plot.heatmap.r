@@ -58,10 +58,13 @@
 #' @examples
 #' \donttest{
 #'    gl <- testset.gl[1:10,]
+#'    if (isTRUE(getOption("dartR_fbm"))) gl <- gl.gen2fbm(gl)
 #'    D <- dist(as.matrix(gl),upper=TRUE,diag=TRUE)
 #'    gl.plot.heatmap(D)
+#'    if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
 #'    D2 <- gl.dist.pop(possums.gl)
 #'    gl.plot.heatmap(D2)
+#'    if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'    D3 <- gl.fixed.diff(testset.gl)
 #'    gl.plot.heatmap(D3)
 #'    }

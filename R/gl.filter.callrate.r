@@ -70,6 +70,7 @@
 #' @examples
 #'  \donttest{
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'   result <- gl.filter.callrate(testset.gl[1:10], method='loc', threshold=0.8,
 #'    verbose=3)
 #'   result <- gl.filter.callrate(testset.gl[1:10], method='ind', threshold=0.8,

@@ -35,6 +35,7 @@ Parameter n must be less than or equal to nLoc(x).
 #' Set error.check = FALSE for speedy execution in simulations
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 gl2 <- gl.subsample.loc(testset.gl, n=50, replace=TRUE, verbose=3)
 }
 \seealso{

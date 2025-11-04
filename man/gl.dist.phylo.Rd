@@ -139,9 +139,10 @@ selecting from the list used by package ape.
 }
 \examples{
 
-\dontrun{
+\donttest{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 tmp <- gl.filter.monomorphs(testset.gl)
-gl.dist.phylo(x=tmp,subst.model="F80")
+gl.dist.phylo(x=tmp,subst.model="F81")
 }
 
 }

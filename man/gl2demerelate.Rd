@@ -22,6 +22,7 @@ Creates a dataframe suitable for input to package \{Demerelate\} from a
 genlight \{adegenet\} object
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 df <- gl2demerelate(testset.gl)
 
 }

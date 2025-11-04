@@ -40,6 +40,7 @@
 #' \url{https://groups.google.com/d/forum/dartr}
 #' 
 #' @examples
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #' # Joining by loci in common, both datasets have the same loci in the same order
 #' x1 <- testset.gl[1:10, ]
 #' nInd(x1)
@@ -49,9 +50,10 @@
 #' nInd(gl)
 #' # Joining by individuals in common, both datasets have the same individuals
 #' # in the same order
-#' x1 <- testset.gl[, 1:100]
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
+#' x1 <- platypus.gl[, 1:100]
 #' nLoc(x1)
-#' x2 <- testset.gl[, 101:200]
+#' x2 <- platypus.gl[, 101:200]
 #' nLoc(x2)
 #' gl <- gl.join(x1, x2, method = "join.by.ind", verbose = 2)
 #' nLoc(gl)
@@ -365,7 +367,7 @@ gl.join <- function(x1,
     # Join the two genlight objects
     x <- rbind(x1, x2)
     
-    # Join the locus metrics, if they exist
+# Join the locus metrics, if they exist
     if (verbose >= 2) {
       cat(report("  Concatenating the individual metrics\n"))
     }
@@ -433,10 +435,12 @@ gl.join <- function(x1,
         x1@other$loc.metrics.flags$FreqHomSnp * x2@other$loc.metrics.flags$FreqHomSnp
       x@other$loc.metrics.flags$monomorphs <-
         x1@other$loc.metrics.flags$monomorphs * x2@other$loc.metrics.flags$monomorphs
-      x@other$loc.metrics.flags$OneRatio <-
-        x1@other$loc.metrics.flags$OneRatio * x2@other$loc.metrics.flags$OneRatio
-      x@other$loc.metrics.flags$PIC <-
-        x1@other$loc.metrics.flags$PIC * x2@other$loc.metrics.flags$PIC
+      x@other$loc.metrics.flags$OneRatioSnp <-
+        x1@other$loc.metrics.flags$OneRatioSnp * x2@other$loc.metrics.flags$OneRatioSnp
+      x@other$loc.metrics.flags$OneRatioRef <-
+        x1@other$loc.metrics.flags$OneRatioRef * x2@other$loc.metrics.flags$OneRatioRef
+      x@other$loc.metrics.flags$AvgPIC <-
+        x1@other$loc.metrics.flags$AvgPIC * x2@other$loc.metrics.flags$AvgPIC
     } else {
       cat(warn(
         "  Warning: Input genlight objectlacks metrics flags. Flags set to zero\n"

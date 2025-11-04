@@ -42,6 +42,10 @@ Be aware due to ambiguity which one is the reference allele a combination of
 This function uses a faster version of df2genind (from the adegenet
  package)
 }
+\examples{
+if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
+gl2gi(possums.gl[1:10,1:20])
+}
 \seealso{
 Other linker: 
 \code{\link{gl2bayesAss}()},

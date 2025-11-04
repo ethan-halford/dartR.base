@@ -21,6 +21,11 @@
 #' individuals [optional].
 #' @param loc.metafile Name of the csv file containing the metrics for
 #' loci [optional].
+#' @param fbm Logical. If TRUE, the returned genlight object will contain a
+#' file-backed matrix (fbm) in its @genome slot. This is useful for very
+#' large datasets that do not fit into RAM. Note that using fbm objects
+#' requires the package bigsnpr to be installed. [default FALSE]. to back convert
+#' use \code{gl.fbm2gen()}.
 #' @param plink.flags additional possible parameters passed on to plink.
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log; 3, progress and results summary; 5, full report
@@ -38,6 +43,7 @@ gl.read.PLINK <- function(filename,
                           loc.metafile = NULL,
                           plink.cmd = "plink",
                           plink.path = "path",
+                          fbm=FALSE,
                           plink.flags = NULL,
                           verbose = NULL) {
   # SET VERBOSITY
@@ -306,6 +312,14 @@ gl.read.PLINK <- function(filename,
   if (verbose > 0) {
     cat(report("Completed:", funname, "\n"))
   }
+  
+  #convert to fbm 
+  if (fbm) {}
+  gl <- gl.gen2fbm(gl, verbose = verbose) 
+  if (verbose>2) {
+    cat(report(" Created an  file-backed matrix (fbm) dartR object\n"))
+  } else gl@fbm <- NULL
+  
   
   return(gl)
   

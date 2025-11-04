@@ -37,6 +37,7 @@ This function only caters for \code{ploidy=2}.
 \examples{
 require("dartR.data")
 #only the first 100 due to check time
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl2bayesAss(platypus.gl[,1:100], outpath=tempdir())
 }
 \references{

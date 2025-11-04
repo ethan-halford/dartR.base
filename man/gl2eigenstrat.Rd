@@ -65,6 +65,7 @@ as 0, will be removed.
 \examples{
 \donttest{
 require("dartR.data")
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl2eigenstrat(platypus.gl,snp.pos='ChromPos_Platypus_Chrom_NCBIv1',
 snp.chr = 'Chrom_Platypus_Chrom_NCBIv1', outpath=tempdir())
 }

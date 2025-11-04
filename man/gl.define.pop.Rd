@@ -28,6 +28,7 @@ their existing population assignment.
 The script returns a genlight object with the new population assignment.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 popNames(testset.gl)
 gl <- gl.define.pop(testset.gl, ind.list=c('AA019073','AA004859'), 
 new='newguys')

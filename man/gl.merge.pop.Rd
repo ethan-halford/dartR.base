@@ -29,6 +29,7 @@ The function works with both SNP and Tag P/A (silicoDArT) data.
 The function returns a genlight object with the new population assignments.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
    gl <- gl.merge.pop(testset.gl, old=c('EmsubRopeMata','EmvicVictJasp'), new='Outgroup')
    
 }

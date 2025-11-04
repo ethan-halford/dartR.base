@@ -24,6 +24,7 @@
 #'  \url{https://groups.google.com/d/forum/dartr}
 #' @examples
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'   gl.report.monomorphs(testset.gl)
 #' # SilicoDArT data
 #'   gl.report.monomorphs(testset.gs)

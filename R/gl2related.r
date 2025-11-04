@@ -29,6 +29,7 @@
 #' \url{https://groups.google.com/d/forum/dartr})
 #' 
 #' @examples
+#' if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 #' gtd <- gl2related(bandicoot.gl[1:10,1:20], save=FALSE, )
 #' \dontrun{
 #' ##running with the related package, use

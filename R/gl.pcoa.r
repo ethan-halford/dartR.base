@@ -147,8 +147,9 @@
 #'\url{https://groups.google.com/d/forum/dartr})
 #'@examples
 #' # PCA (using SNP genlight object)
-#' gl <- possums.gl
-#' pca <- gl.pcoa(possums.gl[1:50,],verbose=2)
+#' gl <- possums.gl[1:90,]
+#' if (isTRUE(getOption("dartR_fbm"))) gl <- gl.gen2fbm(gl)
+#' pca <- gl.pcoa(gl,verbose=2)
 #' gl.pcoa.plot(pca,gl)
 #' \donttest{
 #' gs <- testset.gs
@@ -768,7 +769,8 @@ gl.pcoa <- function(x,
                 title <-
                     paste0("PCA on Tag P/A Data\nScree Plot\n (informative axes only -- ",pc.select," criterion)")
             }
-            
+      #!# intermediate fbm fix
+      if (!is.null(.fbm_or_null(x))) x <- gl.fbm2gen(x)
         pca <-
             glPca(x,
                   nf = nfactors,

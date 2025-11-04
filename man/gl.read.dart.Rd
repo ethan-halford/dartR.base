@@ -7,6 +7,7 @@
 gl.read.dart(
   filename,
   ind.metafile = NULL,
+  fbm = FALSE,
   recalc = TRUE,
   mono.rm = FALSE,
   nas = "-",
@@ -24,6 +25,10 @@ gl.read.dart(
 
 \item{ind.metafile}{File that contains additional information on individuals
 [required].}
+
+\item{fbm}{If TRUE, the genlight object will be converted to a filebacked large matrix format, which is faster if
+the dataset is large [default FALSE, because still in a testing phase].
+If you want to back convert use \code{\link{gl.gen2fbm}} and \code{\link{gl.fbm2gen}}.}
 
 \item{recalc}{If TRUE, force the recalculation of locus metrics [default TRUE].}
 
@@ -83,6 +88,7 @@ monomorphic. To accommodate this, set mono.rm and recalc to TRUE.
 dartfile <- system.file('extdata','testset_SNPs_2Row.csv', package='dartR.data')
 metadata <- system.file('extdata','testset_metadata.csv', package='dartR.data')
 gl <- gl.read.dart(dartfile, ind.metafile = metadata, probar=TRUE)
+gl <- gl.read.dart(dartfile, ind.metafile = metadata, fbm=TRUE)
 }
 \seealso{
 \code{\link{utils.read.dart}}

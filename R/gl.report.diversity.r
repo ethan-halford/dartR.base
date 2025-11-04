@@ -92,6 +92,7 @@
 #'  Contributors: William B. Sherwin, Alexander Sentinella
 
 #' @examples
+#' if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 #' div <- gl.report.diversity(bandicoot.gl, table=FALSE)
 #' div$zero_H_alpha
 #' div$two_H_beta
