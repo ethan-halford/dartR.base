@@ -37,6 +37,7 @@ biocViews:
 Imports: ape,crayon,data.table,foreach,gridExtra,methods,patchwork,plyr,
          reshape2,SNPRelate,StAMPP,stats,stringr,tidyr,utils,MASS,SNPassoc,
          snpStats, raster, bigstatsr, bigsnpr
+         snpStats,gtools
 Suggests: 
     boot,
     devtools,
@@ -85,7 +86,6 @@ Suggests:
     shinyWidgets,
     SIBER,
     stringi,
-    terra,
     tibble,
     vcfR,
     zoo,
@@ -94,7 +94,8 @@ Suggests:
     testthat (>= 3.0.0), 
     ggtern, 
     dendextend,
-    ggdendro
+    ggdendro,
+    terra
 License: GPL (>= 3)
 RoxygenNote: 7.3.2
 NeedsCompilation: no
@@ -110,6 +111,5 @@ Author: Bernd Gruber [aut, cre],
   Floriaan Devloo-Delva [ctb],
   Eric Archer [ctb],
   Ching Ching Lau [ctb]
-Config/testthat/edition: 3
 URL: https://green-striped-gecko.github.io/dartR/
 BugReports: https://groups.google.com/g/dartr?pli=1

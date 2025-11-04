@@ -10,6 +10,7 @@ gl.plot.heatmap(
   palette.divergent = gl.colors("div"),
   palette_discrete = NULL,
   dendrogram = "column",
+  plot.out = TRUE,
   legend.print = TRUE,
   legendx = 0,
   legendy = 0.5,
@@ -56,6 +57,8 @@ gl.plot.heatmap(
 
 \item{dendrogram}{Character string indicating whether to draw 'none',
 'row', 'column' or 'both' dendrograms [default "column"].}
+
+\item{plot.out}{A boolean that indicates whether to plot the results [default TRUE].}
 
 \item{legend.print}{Whether to create legend (only if x is provided) 
 [default TRUE].}
@@ -164,6 +167,6 @@ Other graphics:
 }
 \author{
 Custodian: Luis Mijangos -- Post to
-\url{https://groups.google.com/d/forum/dartr})
+\url{https://groups.google.com/d/forum/dartr}
 }
 \concept{graphics}

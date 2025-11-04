@@ -96,8 +96,8 @@ gl2gapit <- function(x,
   res_output <- as.matrix(res_output)
   res_output[] <- as.character(res_output)
   res_output <- as.matrix(rbind(colnames(res_output),res_output))
-  
-  
+  res_output <- as.data.frame(res_output)
+
   if (verbose > 0) {
     cat(report("  Output files:", paste(
       paste0(outfile, ".geno", ".lfmm."), sep = ""

@@ -710,6 +710,7 @@ gl.report.heterozygosity <- function(x,
     if (plot.display) {
       res.mean <- subsample <- error_L <- error_H <- value <- color <- variable <- He.adj <- res_SE <- NULL
       
+      pop_order <- unique(as.character(pop(x))) 
       # printing plots and reports assigning colors to populations
       if (is(plot.colors.pop, "function")) {
         colors_pops <- plot.colors.pop(length(levels(pop(x))))
@@ -718,6 +719,7 @@ gl.report.heterozygosity <- function(x,
       if (!is(plot.colors.pop, "function")) {
         colors_pops <- plot.colors.pop
       }
+      colors_pops <- setNames(colors_pops, pop_order)
       
       if (n.invariant == 0) {
         
@@ -758,6 +760,12 @@ gl.report.heterozygosity <- function(x,
           
           }
         
+        pop_list_plot_stat$pop <- factor(pop_list_plot_stat$pop, levels = pop_order)
+        
+        lab_df <- pop_list_plot_stat[!duplicated(pop_list_plot_stat$pop),
+                                     c("pop","n.Ind")]
+        labels_named <- setNames(paste(lab_df$pop, round(lab_df$n.Ind, 0), sep = " | "),
+                                 lab_df$pop)
         p3 <-
           ggplot(data = pop_list_plot_stat, aes(x = pop, 
                                                 y = value,
@@ -766,11 +774,14 @@ gl.report.heterozygosity <- function(x,
                    color = "black", 
                    position = position_dodge())+ 
           facet_wrap(~variable, nrow=1) +
-          scale_fill_manual(values = pop_list_plot_stat$color) +
-          scale_x_discrete(labels = paste(pop_list_plot_stat$pop,
-                                          round(pop_list_plot_stat$n.Ind,
-                                                0),
-                                          sep = " | ")) +
+          scale_fill_manual(values = colors_pops,
+                             breaks = pop_order,
+                             limits = pop_order) +
+          scale_x_discrete(limits = pop_order, labels = labels_named) +
+          # scale_x_discrete(labels = paste(pop_list_plot_stat$pop,
+          #                                 round(pop_list_plot_stat$n.Ind,
+          #                                       0),
+          #                                 sep = " | ")) +
           plot.theme +
           theme(
             axis.ticks.x = element_blank(),

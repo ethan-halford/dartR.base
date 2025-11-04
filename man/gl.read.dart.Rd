@@ -67,15 +67,19 @@ into a genlight object of class dartR.
 \details{
 The function will determine automatically if the data are in Diversity Arrays
 one-row csv format or two-row csv format. 
+
 The first 
 row of data is determined from the number of rows with an * in the first 
 column. This can be alternatively specified with the topskip parameter.
+
 The DArT service code is added to the ind.metrics of the genlight object. 
 The row containing the service code for each individual can be specified with 
 the service.row parameter.
-#'The DArT plate well is added to the ind.metrics of the genlight object. 
+
+The DArT plate well is added to the ind.metrics of the genlight object. 
 The row containing the plate well for each individual can be specified with 
 the plate.row parameter.
+
 If individuals have been deleted from the input file manually, then the locus
 metrics supplied by DArT will no longer be correct and some loci may be
 monomorphic. To accommodate this, set mono.rm and recalc to TRUE.

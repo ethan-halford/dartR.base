@@ -168,7 +168,7 @@ gl.filter.reproducibility <- function(x,
             coord_cartesian(xlim = c(min, 1)) + 
             geom_vline(xintercept = threshold,
                        color = "red",
-                       size = 1) + 
+                       linewidth = 1) + 
             xlab(xlabel) + 
             ylab("Count") +
             plot.theme
@@ -194,7 +194,7 @@ gl.filter.reproducibility <- function(x,
             coord_cartesian(xlim = c(min, 1)) + 
             geom_vline(xintercept = threshold,
                        color = "red",
-                       size = 1) + 
+                       linewidth = 1) + 
             xlab(xlabel) + 
             ylab("Count") +
             plot.theme
