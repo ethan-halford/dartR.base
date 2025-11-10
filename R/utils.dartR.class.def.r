@@ -1019,6 +1019,11 @@ setMethod("glSum", signature(x = "dartR"), function(x, alleleAsUnit = TRUE, useC
 })
 
 
+## Ensure the generic exists (adegenet defines it; this is safe if already present)
+if (!methods::isGeneric("glNA")) {
+  methods::setGeneric("glNA", function(x, alleleAsUnit = TRUE, useC=FALSE) standardGeneric("glNA"))
+}
+
 
 setMethod("glNA", signature(x = "dartR"), function(x, alleleAsUnit = TRUE)  {
   fbm <- .fbm_or_null(x)
