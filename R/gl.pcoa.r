@@ -778,7 +778,7 @@ gl.pcoa <- function(x,
         #run PCA on imputed data using big_SVD
          dummy <- bigstatsr::big_SVD(x@fbm, fun.scaling = big_scale(center = T, scale=FALSE), k = nInd(x)-1)
         # construct glPca object
-         pca <- list(scores = dummy$u %*% diag(dummy$d)/2, eig = dummy$d^2 / (4*nInd(x2)),loadings=dummy$v*2)  
+         pca <- list(scores = dummy$u %*% diag(dummy$d)/2, eig = dummy$d^2 / (4*nInd(x)),loadings=dummy$v*2)  
          class(pca) <- "glPca"
       } else {
         pca <-
