@@ -1045,7 +1045,6 @@ setMethod("glNA", signature(x = "dartR"), function(x, alleleAsUnit = TRUE)  {
 })
 
 #' glMean function for dartR object
-#' 
 #' @param x a dartR object 
 #' @param alleleAsUnit logical; if TRUE, the mean is calculated per allele,
 #' if FALSE, per individual
