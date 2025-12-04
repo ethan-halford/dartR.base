@@ -36,6 +36,7 @@ WARNING: UTILITY SCRIPTS ARE FOR INTERNAL USE ONLY AND SHOULD NOT BE USED BY END
 \details{
 This script calculates various distances between individuals based on 
 SNP genotypes.
+
 The distance measure can be one of:
  \itemize{
   \item Euclidean -- Euclidean Distance applied to Cartesian coordinates defined

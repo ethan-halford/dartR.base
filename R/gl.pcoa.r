@@ -145,23 +145,23 @@
 #'@return An object of class pcoa containing the eigenvalues and factor scores
 #'@author Author(s): Arthur Georges and Jesus Castrejon. Custodian: Arthur Georges (Post to
 #'\url{https://groups.google.com/d/forum/dartr})
-#'@examples
-#' # PCA (using SNP genlight object)
-#' gl <- possums.gl
-#' pca <- gl.pcoa(possums.gl[1:50,],verbose=2)
-#' gl.pcoa.plot(pca,gl)
-#' \donttest{
-#' gs <- testset.gs
-#' levels(pop(gs))<-c(rep('Coast',5),rep('Cooper',3),rep('Coast',5),
-#' rep('MDB',8),rep('Coast',6),'Em.subglobosa','Em.victoriae')
-#' # PCA (using SilicoDArT genlight object)
-#' pca <- gl.pcoa(gs)
-#' gl.pcoa.plot(pca,gs)
-#' # Using a distance matrix
-#' D <- gl.dist.ind(testset.gs, method='jaccard')
-#' pcoa <- gl.pcoa(D,correction="cailliez")
-#' gl.pcoa.plot(pcoa,gs)
-#' }
+#@examples
+# # PCA (using SNP genlight object)
+# gl <- testset.gl
+# pca <- gl.pcoa(testset.gl[1:50,],verbose=2)
+# gl.pcoa.plot(pca,gl)
+# \donttest{
+# gs <- testset.gs
+# levels(pop(gs))<-c(rep('Coast',5),rep('Cooper',3),rep('Coast',5),
+# rep('MDB',8),rep('Coast',6),'Em.subglobosa','Em.victoriae')
+# # PCA (using SilicoDArT genlight object)
+# pca <- gl.pcoa(gs)
+# gl.pcoa.plot(pca,gs)
+# # Using a distance matrix
+# D <- gl.dist.ind(testset.gs, method='jaccard')
+# pcoa <- gl.pcoa(D,correction="cailliez")
+# gl.pcoa.plot(pcoa,gs)
+# }
 #'@references
 #'\itemize{
 #'\item Cailliez, F. (1983) The analytical solution of the additive constant

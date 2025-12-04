@@ -9,7 +9,7 @@ gl.join(x1, x2, method = NULL, verbose = NULL)
 \arguments{
 \item{x1}{Name of the first genlight object [required].}
 
-\item{x2}{Name of the first genlight object [required].}
+\item{x2}{Name of the second genlight object [required].}
 
 \item{method}{Legacy parameter, issue warning [default NULL]}
 
@@ -40,24 +40,28 @@ If method='end2end', the loci in the two genlight objects must be the same and i
 are combined. Note that if two individuals have the same names, they will be made unique.#'
 }
 \examples{
+# Join by adding loci to a set of common individuals
 x1 <- testset.gl[,1:100]
 x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
 nLoc(x1)
 x2 <- testset.gl[,101:150]
 x2@other$loc.metrics <-  testset.gl@other$loc.metrics[101:150,]
 nLoc(x2)
-gl <- gl.join(x1, x2, verbose=2)
+gl <- gl.join(x1, x2, verbose=3)
 nLoc(gl)
 
-x1 <- testset.gl[,1:100]
-x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
-nLoc(x1)
-x2 <- testset.gl[,1:100]
-x2@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
-nLoc(x2)
-gl <- gl.join(x1, x2, verbose=2)
+# Join by adding individuals with a set of common loci
+nInd(testset.gl)
+x1 <- gl.drop.ind(testset.gl,ind.list=c("AA010915","UC_00126","AA032760","AA013214",
+"AA011723","AA012411","AA019237","AA019238","AA019239","AA019235","AA019240",
+"AA019241","AA019242","AA019243"))
+nInd(x1)
+x2 <- gl.keep.ind(testset.gl,ind.list=c("AA010915","UC_00126","AA032760","AA013214",
+"AA011723","AA012411","AA019237","AA019238","AA019239","AA019235","AA019240",
+"AA019241","AA019242","AA019243"))
+nInd(x2)
+gl <- gl.join(x1, x2, verbose=3)
 nInd(gl)
-
 }
 \seealso{
 Other data manipulation: 

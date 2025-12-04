@@ -89,12 +89,6 @@ specified for the plot to be saved.
  If a plot directory (plot.dir) is specified, the ggplot binary is saved to that
  directory; otherwise to the tempdir().
 }
-\examples{
-pca <- gl.pcoa(testset.gl)
-gl.report.factorloadings(pca = pca)
-gl2 <- gl.filter.factorloadings(pca=pca,x=testset.gl,threshold=0.2)
-
-}
 \author{
 Custodian: Arthur Georges -- Post to
 \url{https://groups.google.com/d/forum/dartr}

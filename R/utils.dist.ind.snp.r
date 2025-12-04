@@ -18,7 +18,7 @@
 #' @details
 #' This script calculates various distances between individuals based on 
 #' SNP genotypes.
-
+#'
 #' The distance measure can be one of:
 #'  \itemize{
 #'   \item Euclidean -- Euclidean Distance applied to Cartesian coordinates defined
@@ -34,145 +34,140 @@
 #' @author Author(s): Arthur Georges. Custodian: Arthur Georges -- Post to
 #' \url{https://groups.google.com/d/forum/dartr}
 #' 
-# @export
 #' @return An object of class 'dist' or 'matrix' giving distances between individuals
+#' @export
 
 # Examples for testing
 # D <- utils.dist.ind.snp(testset.gl, method='Manhattan')
-# D <- utils.dist.ind.snp(testset.gl, method='Euclidean',scale=TRUE)
+# D <- utils.dist.ind.snp(testset.gl, method='Euclidean', scale = TRUE)
 # D <- utils.dist.ind.snp(testset.gl, method='Simple')
 
 utils.dist.ind.snp <- function(x,
-                              method = "Euclidean",
-                              scale=FALSE,
-                              type="dist",
-                              verbose = NULL) {
-    # SET VERBOSITY
-    verbose <- gl.check.verbosity(verbose)
-    
-    # FLAG SCRIPT START
-    funname <- match.call()[[1]]
-    utils.flag.start(func = funname,
-                     build = "v.2023.3",
-                     verbose = verbose)
-    
-    # CHECK DATATYPE
-    datatype <-
-        utils.check.datatype(x, accept = "SNP", verbose = verbose)
-    
-    # SCRIPT SPECIFIC ERROR CHECKING
-    
-    method <- tolower(method)
-    
-    # FUNCTION SPECIFIC ERROR CHECKING
-    
-    if (!(method %in% c(
-        "euclidean",
-        "simple",
-        "absolute",
-        "czekanowski",
-        "manhattan"
-        ))) {
-        if (verbose >= 2) {
-            cat(warn(
-                "  Warning: Method not in the list of options, set to Euclidean\n"
-            ))
-        }
-        method <- "euclidean"
-    }
-    
-    if(scale==TRUE && !(method == "euclidean")){
-        cat(warn("  Warning: parameter scale only applies to Euclidean Distance, ignored\n"))
-    }
-    
-    # DO THE JOB
-    
-    mat <- as.matrix(x)
-
-    dd <- array(NA, c(nInd(x), nInd(x)))
-    nI <- nInd(x)
-    nL <- nLoc(x)
-    
+                               method  = "Euclidean",
+                               scale   = FALSE,
+                               type    = "dist",
+                               verbose = NULL) {
+  # SET VERBOSITY
+  verbose <- gl.check.verbosity(verbose)
+  
+  # FLAG SCRIPT START
+  funname <- match.call()[[1]]
+  utils.flag.start(func = funname,
+                   build = "v.2023.3",
+                   verbose = verbose)
+  
+  # CHECK DATATYPE
+  datatype <- utils.check.datatype(x, accept = "SNP", verbose = verbose)
+  
+  # FUNCTION-SPECIFIC SETTINGS
+  method <- tolower(method)
+  
+  if (!(method %in% c("euclidean", "simple", "absolute", "czekanowski", "manhattan"))) {
     if (verbose >= 2) {
-        if(method=="euclidean"){
-            if(scale==TRUE){
-                cat(report("  Calculating the scaled distance matrix --", method, "\n"))
-            } else {
-                cat(report("  Calculating the unscaled distance matrix --", method, "\n"))
-            }
-        } else {
-            cat(report("  Calculating the distance matrix --", method, "\n"))
-        }
+      cat(warn("  Warning: Method not in the list of options, set to Euclidean\n"))
     }
-    for (i in (1:(nI - 1))) {
-        for (j in ((i + 1):nI)) {
-            row1 <- mat[i,]
-            row2 <- mat[j,]
-            
-            # if (method == "euclidean") {
-            #   sq <- (row1-row2)**2
-            #   sq <- sq[!is.na(sq)]
-            #   L <- length(sq)
-            #     if(scale==TRUE){
-            #         dd[j,i] <- sqrt(sum(sq)/L)
-            #     } else {
-            #         dd[j,i] <- sqrt(sum(sq))
-            #     }
-            #   
-
-              if (method == "euclidean") {
-                sq <- (row1 - row2)^2
-                L  <- sum(!is.na(sq))
-                if (L == 0L) { dd[j,i] <- NA_real_; next }        # guard
-                if (scale) {
-                  dd[j,i] <- sqrt(sum(sq, na.rm = TRUE) / L) / 2  # ∈ [0,1]
-                  # equivalently: sqrt(sum(sq, na.rm=TRUE)) / (2*sqrt(L))
-                } else {
-                  dd[j,i] <- sqrt(sum(sq, na.rm = TRUE))
-                }
-              }        
-              
-            } else if (method == "simple") {
-              row <- array(1,dim=nL)
-              row[((row1 + row2) == 4)] <- 2
-              row[((row1 + row2) == 0)] <- 0
-              row[is.na(row1 + row2)] <- NA
-              row <- row[!is.na(row)]
-              L <- length(row)
-              dd[j,i] <- 1 - sum(row)/(2*L)
-            } else if (method == "absolute") {
-              row <- array(1,dim=nL)
-              row[((row1 + row2) == 0)] <- 0
-              row[is.na(row1 + row2)] <- NA
-              row <- row[!is.na(row)]
-              L <- length(row)
-              dd[j,i] <- 1 - sum(row)/(L)
-            } else if (method == "manhattan" || method == "czekanowski") {
-              modq <- abs(row1-row2)
-              modq <- modq[!is.na(modq)]
-              L <- length(modq)
-              dd[j,i] <- sum(modq)/(2*L)
-            } else {
-                # Programming error
-                stop(error("Fatal Error: Notify dartR development team\n"))
-            }
-        }
-        dd[i, i] <- 0
-        dd[i,j] <- dd[j,i]
-    }
-
-    if(type=="dist"){
-      dd <- as.dist(dd)
-      if(verbose >= 2){cat(report("  Returning a stats::dist object\n"))}
+    method <- "euclidean"
+  }
+  
+  if (scale && method != "euclidean") {
+    cat(warn("  Warning: parameter scale only applies to Euclidean Distance, ignored\n"))
+  }
+  
+  # DO THE JOB
+  mat <- as.matrix(x)
+  
+  nI <- nInd(x)
+  nL <- nLoc(x)
+  dd <- array(NA_real_, c(nI, nI))
+  
+  if (verbose >= 2) {
+    if (method == "euclidean") {
+      if (scale) {
+        cat(report("  Calculating the scaled distance matrix --", method, "\n"))
+      } else {
+        cat(report("  Calculating the unscaled distance matrix --", method, "\n"))
+      }
     } else {
-        if(verbose >= 2){cat(report("  Returning a square matrix object\n"))}
+      cat(report("  Calculating the distance matrix --", method, "\n"))
     }
-    
-    # FLAG SCRIPT END
-    
-    if (verbose > 0) {
-        cat(report("Completed:", funname, "\n"))
+  }
+  
+  for (i in 1:(nI - 1L)) {
+    for (j in (i + 1L):nI) {
+      row1 <- mat[i, ]
+      row2 <- mat[j, ]
+      
+      if (method == "euclidean") {
+        sq <- (row1 - row2)^2
+        L  <- sum(!is.na(sq))
+        if (L == 0L) {
+          dd[j, i] <- NA_real_
+          next
+        }
+        if (scale) {
+          # scaled to [0,1]
+          dd[j, i] <- sqrt(sum(sq, na.rm = TRUE) / L) / 2
+        } else {
+          dd[j, i] <- sqrt(sum(sq, na.rm = TRUE))
+        }
+        
+      } else if (method == "simple") {
+        row <- array(1, dim = nL)
+        row[(row1 + row2) == 4] <- 2
+        row[(row1 + row2) == 0] <- 0
+        row[is.na(row1 + row2)] <- NA
+        row <- row[!is.na(row)]
+        L   <- length(row)
+        if (L == 0L) {
+          dd[j, i] <- NA_real_
+        } else {
+          dd[j, i] <- 1 - sum(row) / (2 * L)
+        }
+        
+      } else if (method == "absolute") {
+        row <- array(1, dim = nL)
+        row[(row1 + row2) == 0] <- 0
+        row[is.na(row1 + row2)] <- NA
+        row <- row[!is.na(row)]
+        L   <- length(row)
+        if (L == 0L) {
+          dd[j, i] <- NA_real_
+        } else {
+          dd[j, i] <- 1 - sum(row) / L
+        }
+        
+      } else if (method == "manhattan" || method == "czekanowski") {
+        modq <- abs(row1 - row2)
+        modq <- modq[!is.na(modq)]
+        L    <- length(modq)
+        if (L == 0L) {
+          dd[j, i] <- NA_real_
+        } else {
+          dd[j, i] <- sum(modq) / (2 * L)
+        }
+        
+      } else {
+        # Programming error
+        stop(error("Fatal Error: Notify dartR development team\n"))
+      }
     }
-    
-    return(dd)
+  }
+  
+  # Fill diagonal and mirror upper triangle
+  diag(dd) <- 0
+  dd[upper.tri(dd)] <- t(dd)[upper.tri(dd)]
+  
+  if (type == "dist") {
+    dd <- as.dist(dd)
+    if (verbose >= 2) cat(report("  Returning a stats::dist object\n"))
+  } else {
+    if (verbose >= 2) cat(report("  Returning a square matrix object\n"))
+  }
+  
+  # FLAG SCRIPT END
+  if (verbose > 0) {
+    cat(report("Completed:", funname, "\n"))
+  }
+  
+  return(dd)
 }
