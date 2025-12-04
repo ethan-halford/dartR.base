@@ -1052,7 +1052,11 @@ setMethod("glNA", signature(x = "dartR"), function(x, alleleAsUnit = TRUE)  {
 #' @return A numeric vector of means per locus
 #' @export
 glMean <- function(x, alleleAsUnit = TRUE) {
-  if (alleleAsUnit) {
+  fbm <- .fbm_or_null(x)
+  if (is.null(fbm)) {
+    return(adegenet::glMean(x, alleleAsUnit = alleleAsUnit))
+  }
+ if (alleleAsUnit) {
     N <- sum(ploidy(x)) - glNA(x, alleleAsUnit = TRUE)
     res <- glSum(x, alleleAsUnit = TRUE)/N
   } else {
