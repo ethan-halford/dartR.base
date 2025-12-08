@@ -112,6 +112,7 @@ The function \code{\link{gl.filter.secondaries}} will filter out the
 }
 \examples{
 require("dartR.data")
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 test <- gl.filter.callrate(platypus.gl,threshold = 1)
 n.inv <- gl.report.secondaries(test)
 gl.report.heterozygosity(test, n.invariant = n.inv[7, 2])
@@ -127,6 +128,7 @@ Schmidt, T.L., Jasper, M.-E., Weeks, A.R., Hoffmann, A.A., 2021.
 \code{\link{utils.n.var.invariant}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.hamming}()},

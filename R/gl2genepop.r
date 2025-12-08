@@ -4,8 +4,8 @@
 
 #' @description
 #' The genepop format is used by several external applications (for example
-#' Neestimator2
-#' (\url{http://www.molecularfisherieslaboratory.com.au/neestimator-software/}).
+#' Neestimator2. Unfortunatelly, the software seems to be no longer easily 
+#' available. To install use the \link[dartRverse]{gl.download.binary} function.
 #' So the main idea is to create the genepop file and then run the other
 #' software externally. As a feature, the genepop file is also returned as an
 #' invisible data.frame by the function.
@@ -30,8 +30,10 @@
 #' \donttest{
 #' require("dartR.data")
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) possums.gl <- gl.gen2fbm(possums.gl)
 #' geno <- gl2genepop(possums.gl[1:3,1:9], outpath = tempdir())
 #' head(geno)
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' test <- gl.filter.callrate(platypus.gl,threshold = 1)
 #' popNames(test)
 #' gl2genepop(test, pop.order = c("TENTERFIELD","SEVERN_ABOVE","SEVERN_BELOW"),
@@ -67,7 +69,7 @@ gl2genepop <- function (x,
   #works only with SNP data
   if (datatype != "SNP") {
     cat(error(
-      "  Only SNPs (diploid data can be transformed into genepop format!\n"
+      "  Only SNPs (diploid) data can be transformed into genepop format!\n"
     ))
     stop()
   }
@@ -80,6 +82,9 @@ gl2genepop <- function (x,
     )
     pop(x) <- rep("Pop1", nInd(x))
   }
+  
+  # changing spaces by underscors in pop names
+  popNames(x) <- gsub(" ","_",popNames(x))
   
   # DO THE JOB
   #ordering populations

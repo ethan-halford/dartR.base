@@ -33,6 +33,7 @@
 #' @examples
 #'  \donttest{
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'   gl.report.reproducibility(testset.gl)
 #'   result <- gl.filter.reproducibility(testset.gl, threshold=0.99, verbose=3)
 #' # Tag P/A data
@@ -87,25 +88,15 @@ gl.filter.reproducibility <- function(x,
         )
         threshold <- 0.99
     }
-    if (datatype == "SilicoDArT") {
-        if (is.null(x@other$loc.metrics$Reproducibility)) {
-            stop(
-                error(
-                    "Fatal Error: Dataset does not include Reproducibility among
-                    the locus metrics, cannot be calculated!"
-                )
-            )
-        }
-    }
-    if (datatype == "SNP") {
-        if (is.null(x@other$loc.metrics$RepAvg)) {
-            stop(
-                error(
-                    "Fatal Error: Dataset does not include RepAvg among the 
-                    locus metrics, cannot be calculated!"
-                )
-            )
-        }
+    
+    if (isFALSE("AlleleID" %in% names(x$other$loc.metrics)) &
+        isFALSE("CloneID" %in% names(x$other$loc.metrics))) {
+      stop(
+        error(
+          "Neither CloneID or AlleleID metrics were found in the slot 
+                loc.metrics, which are required for this function to work\n"
+        )
+      )
     }
     
     # DO THE JOB
@@ -177,7 +168,7 @@ gl.filter.reproducibility <- function(x,
             coord_cartesian(xlim = c(min, 1)) + 
             geom_vline(xintercept = threshold,
                        color = "red",
-                       size = 1) + 
+                       linewidth = 1) + 
             xlab(xlabel) + 
             ylab("Count") +
             plot.theme
@@ -203,7 +194,7 @@ gl.filter.reproducibility <- function(x,
             coord_cartesian(xlim = c(min, 1)) + 
             geom_vline(xintercept = threshold,
                        color = "red",
-                       size = 1) + 
+                       linewidth = 1) + 
             xlab(xlabel) + 
             ylab("Count") +
             plot.theme

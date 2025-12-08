@@ -61,8 +61,9 @@
 
 #' @examples
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'   out <- gl.report.bases(testset.gl)
-#'   col <- gl.select.colors(select=c(6,1),palette=rainbow)
+#'   col <- gl.select.colors(select=c(6,1),palette=rainbow, verbose=0)
 #'   out <- gl.report.bases(testset.gl,plot.colors=col)
 #' # Tag P/A data
 #'   out <- gl.report.bases(testset.gs)

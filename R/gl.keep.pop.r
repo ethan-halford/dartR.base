@@ -32,6 +32,7 @@
 #Examples -------------
 #' @examples
 #'  # SNP data
+#'  if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'    gl2 <- gl.keep.pop(testset.gl, pop.list=c('EmsubRopeMata', 'EmvicVictJasp'))
 #'    gl2 <- gl.keep.pop(testset.gl, pop.list=c('EmsubRopeMata', 'EmvicVictJasp'),
 #'    mono.rm=TRUE,recalc=TRUE)

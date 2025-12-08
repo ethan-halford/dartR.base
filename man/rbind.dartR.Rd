@@ -4,10 +4,24 @@
 \alias{rbind.dartR}
 \title{adjust rbind for dartR}
 \usage{
-\method{rbind}{dartR}(...)
+\method{rbind}{dartR}(
+  ...,
+  backingfile = tempfile("geno_rbind_"),
+  code = NULL,
+  chunk = 2048L,
+  quiet = TRUE
+)
 }
 \arguments{
 \item{...}{list of dartR objects}
+
+\item{backingfile}{prefix for the backing file of the resulting FBM}
+
+\item{code}{code mapping to use for the resulting FBM=CODE_012; if NULL, inherits from the first FBM input}
+
+\item{chunk}{number of columns to process in a block when copying from FBMs}
+
+\item{quiet}{suppress warnings. default: TRUE}
 }
 \value{
 A genlight object

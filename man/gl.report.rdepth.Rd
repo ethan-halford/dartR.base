@@ -61,6 +61,7 @@ The function displays a table of minimum, maximum, mean and quantiles for
 }
 \examples{
 # SNP data
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 df <- gl.report.rdepth(testset.gl)
 df <- gl.report.rdepth(testset.gs)
 
@@ -69,6 +70,7 @@ df <- gl.report.rdepth(testset.gs)
 \code{\link{gl.filter.rdepth}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.hamming}()},

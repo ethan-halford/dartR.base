@@ -65,6 +65,7 @@ To avoid issues from inadvertent use of this function in an assignment statement
 the function returns the genlight object unaltered.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 out <- gl.report.taglength(testset.gl)
 
 }
@@ -72,6 +73,7 @@ out <- gl.report.taglength(testset.gl)
 \code{\link{gl.filter.taglength}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.hamming}()},

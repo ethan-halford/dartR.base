@@ -6,6 +6,8 @@
 #' individual (see details for explanation) [default NULL].
 #' @param mode "genotype" all heterozygous sites will be coded as 1 regardless ploidy level, 
 #' dosage: sites will be codes as copy number of alternate allele [default genotype]
+#' @param fbm Logical, if TRUE the dartR object will contain a file-backed matrix. 
+#' this is important for large data sets that do not fit into RAM.
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log; 3, progress and results summary; 5, full report
 #' [default 2, unless specified using gl.set.verbosity].
@@ -35,6 +37,7 @@
 gl.read.vcf <- function(vcffile,
                         ind.metafile = NULL,
                         mode="genotype",
+                        fbm=FALSE,
                         verbose = NULL) {
 
   # SET VERBOSITY
@@ -275,6 +278,14 @@ gl.read.vcf <- function(vcffile,
       )
     )
   }
+  #convert to fbm 
+  if (fbm) {}
+  x <- gl.gen2fbm(x, verbose = verbose) 
+  if (verbose>2) {
+    cat(report(" Created an  file-backed matrix (fbm) dartR object\n"))
+  } else x@fbm <- NULL
+  
+  
   return(x)
   
 }

@@ -102,6 +102,7 @@ specified for the plot to be saved.
   gl.report.callrate(test.gs)
   gl.report.callrate(test.gs,method='ind')
   }
+  if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
   test.gl <- testset.gl[1:20,]
   gl.report.callrate(test.gl)
   
@@ -110,6 +111,7 @@ specified for the plot to be saved.
 \code{\link{gl.filter.callrate}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.hamming}()},
 \code{\link{gl.report.locmetric}()},

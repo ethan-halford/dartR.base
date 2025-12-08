@@ -23,6 +23,7 @@
 #' @return An object of class 'dist' or 'matrix' giving distances between individuals
 
 # Examples for testing
+
 # D.ind <- gl.dist.ind(testset.gl)
 # as.matrix(D.ind)[1:7,1:7]
 # D.pop <- utils.collapse.matrix(D=D.ind,x=testset.gl,verbose=3)
@@ -99,8 +100,7 @@ utils.collapse.matrix <- function(D,
     }
   }
   
-  #if(class(D)=='dist'){
-  if (inherits(D, "dist")) {
+  if (is(D,'dist')){
     pop.mat <- as.dist(pop.mat)
     if(verbose >= 3){cat(report("  Returning object of class 'dist'\n"))}
   }  else {

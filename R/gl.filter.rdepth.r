@@ -45,6 +45,7 @@
 #' @examples
 #'  \donttest{
 #' # SNP data
+#' if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 #'   gl.report.rdepth(testset.gl)
 #'   result <- gl.filter.rdepth(testset.gl, lower=8, upper=50, verbose=3)
 #' # Tag P/A data
@@ -90,15 +91,27 @@ gl.filter.rdepth <-  function(x,
     
     # FUNCTION SPECIFIC ERROR CHECKING
     
+    if (datatype == "SilicoDArT") {
+      if (!is.null(x@other$loc.metrics$AvgReadDepth)) {
+        rdepth <- x@other$loc.metrics$AvgReadDepth
+      } else {
+        stop(error(
+          "Fatal Error: Read depth not included among the locus metrics"
+        ))
+      }
+    } else if (datatype == "SNP") {
+      if (!is.null(x@other$loc.metrics$rdepth)) {
+        rdepth <- x@other$loc.metrics$rdepth
+      } else {
+        stop(error(
+          "Fatal Error: Read depth not included among the locus metrics"
+        ))
+      }
+    }
+    
     # DO THE JOB
     
     n0 <- nLoc(x)
-    
-    if (datatype == "SilicoDArT") {
-        rdepth <- x@other$loc.metrics$AvgReadDepth
-    } else if (datatype == "SNP") {
-        rdepth <- x@other$loc.metrics$rdepth
-    }
     
     # Remove SNP loci with rdepth < threshold
     
@@ -135,8 +148,8 @@ gl.filter.rdepth <-  function(x,
                            color = plot.colors[1],
                            fill = plot.colors[2]) + 
             coord_cartesian(xlim = c(0, max)) + 
-            geom_vline(xintercept = lower, color = "red", size = 1) +
-            geom_vline(xintercept = upper, color = "red", size = 1) + 
+            geom_vline(xintercept = lower, color = "red", linewidth = 1) +
+            geom_vline(xintercept = upper, color = "red", linewidth = 1) + 
             xlab(xlabel) +
             ylab("Count") + 
             plot.theme
@@ -161,8 +174,8 @@ gl.filter.rdepth <-  function(x,
                            color = plot.colors[1],
                            fill = plot.colors[2]) +
             coord_cartesian(xlim = c(0, max)) +
-            geom_vline(xintercept = lower, color = "red",size = 1) + 
-            geom_vline(xintercept = upper,color = "red",size = 1) + 
+            geom_vline(xintercept = lower, color = "red",linewidth = 1) + 
+            geom_vline(xintercept = upper,color = "red",linewidth = 1) + 
             xlab(xlabel) +
             ylab("Count") +
             plot.theme

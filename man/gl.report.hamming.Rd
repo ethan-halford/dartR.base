@@ -80,10 +80,9 @@ as implemented in \code{\link{utils.hamming}}
  }
 }
 \examples{
- \donttest{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 gl.report.hamming(testset.gl[,1:100])
 gl.report.hamming(testset.gs[,1:100])
-}
 #' # SNP data
 test <- platypus.gl
 test <- gl.subsample.loc(platypus.gl,n=50)
@@ -94,6 +93,7 @@ result <- gl.report.hamming(test, plot.file="ttest", verbose=3)
 \code{\link{gl.filter.hamming}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.locmetric}()},

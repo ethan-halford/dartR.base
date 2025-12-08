@@ -96,6 +96,7 @@ they are less susceptible to long-tailed distributions and outliers.
 }
 \examples{
 # SNP data
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 out <- gl.report.locmetric(testset.gl,metric='SnpPosition')
 # Tag P/A data
 out <- gl.report.locmetric(testset.gs,metric='AvgReadDepth')
@@ -104,6 +105,7 @@ out <- gl.report.locmetric(testset.gs,metric='AvgReadDepth')
 \code{\link{gl.filter.locmetric}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.hamming}()},

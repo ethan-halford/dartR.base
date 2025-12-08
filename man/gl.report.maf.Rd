@@ -83,6 +83,7 @@ Examples of other themes that can be used can be consulted in \itemize{
  }
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 gl <- gl.filter.allna(platypus.gl)
 gl.report.maf(gl)
 }
@@ -90,6 +91,7 @@ gl.report.maf(gl)
 \code{\link{gl.filter.maf}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.hamming}()},

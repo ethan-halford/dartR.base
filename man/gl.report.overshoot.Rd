@@ -31,6 +31,7 @@ Resultant ggplot(s) and the tabulation(s) are saved to the session's
 temporary directory.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
 gl.report.overshoot(testset.gl)
 
 }
@@ -38,6 +39,7 @@ gl.report.overshoot(testset.gl)
 \code{\link{gl.filter.overshoot}}
 
 Other matched report: 
+\code{\link{gl.filter.excess.het}()},
 \code{\link{gl.report.allna}()},
 \code{\link{gl.report.callrate}()},
 \code{\link{gl.report.hamming}()},

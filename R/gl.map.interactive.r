@@ -16,14 +16,9 @@
 #'  populations [default TRUE].
 #' @param pop.labels.cex Size of population labels [default 12].
 #' @param ind.circles Should individuals plotted as circles [default TRUE].
-#' @param ind.circle.cols Colors of circles. Colors can be provided as usual by 
-#' names (e.g. "black") and are re-cycled. So a color c("blue","red") colors 
-#' individuals alternatively between blue and red using the genlight object
-#'  order of individuals. For transparency see parameter 
-#'  ind.circle.transparency. Defaults to rainbow colors by population  if not
-#'   provided. If you want to have your own colors for each population, check
-#'    the platypus.gl example below.
-#' @param ind.circle.cex (size or circles in pixels ) [default 10].
+#' @param ind.circle.cols Colors of circles. A color palette or a vectot with
+#' as many colors as there are populations in the dataset [default rainbow].
+#' @param ind.circle.cex Size or circles in pixels [default 10].
 #' @param ind.circle.transparency Transparency of circles between 0=invisible 
 #' and 1=no transparency. Defaults to 0.8.
 #' @param palette.links Color palette for the links in case a matrix is provided
@@ -31,6 +26,13 @@
 #' @param legend.title Legend's title for the links in case a matrix is provided
 #'  [default NULL].
 #' @param provider Passed to leaflet [default "Esri.NatGeoWorldMap"].
+#' @param scale.bar Whether to add a scale bar [default TRUE].
+#' @param raster.image Path to a georeferenced raster image to plot 
+#' [default NULL].
+#' @param raster.opacity The opacity of the raster, expressed from 0 to 1 
+#' [default 0.5].
+#' @param raster.colors The color palette to use to color the raster values
+#'  [default scales::viridis_pal(option = "D")(255)].
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log; 3, progress and results summary; 5, full report
 #' [default 2, unless specified using gl.set.verbosity].
@@ -39,16 +41,16 @@
 #' A wrapper around the \pkg{leaflet} package. For possible background 
 #' maps check as specified via the provider:
 #' \url{http://leaflet-extras.github.io/leaflet-providers/preview/index.html}
-
+#' 
 #' The palette.links argument can be any of the following:
 #' A character vector of RGB or named colors. Examples: palette(), 
 #' c("#000000", "#0000FF", "#FFFFFF"), topo.colors(10)
-
+#' 
 #' The name of an RColorBrewer palette, e.g. "BuPu" or "Greens".
-
+#' 
 #' The full name of a viridis palette: "viridis", "magma", "inferno", 
 #' or "plasma".
-
+#' 
 #' A function that receives a single value between 0 and 1 and returns a color.
 #'  Examples: colorRamp(c("#000000", "#FFFFFF"), interpolate = "spline").
 
@@ -56,8 +58,10 @@
 #' 
 #' @examples
 #' require("dartR.data")
+#' if (isTRUE(getOption("dartR_fbm"))) bandicoot.gl <- gl.gen2fbm(bandicoot.gl)
 #' gl.map.interactive(bandicoot.gl)
-#' cols <- c("red","blue","yellow")[as.numeric(pop(platypus.gl))]
+#' cols <- c("red","blue","yellow")
+#' if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 #' gl.map.interactive(platypus.gl, ind.circle.cols=cols, ind.circle.cex=10, 
 #' ind.circle.transparency=0.5)
 #' 
@@ -72,12 +76,16 @@ gl.map.interactive <- function(x,
                                pop.labels = TRUE,
                                pop.labels.cex = 12,
                                ind.circles = TRUE,
-                               ind.circle.cols = NULL,
+                               ind.circle.cols = rainbow,
                                ind.circle.cex = 10,
                                ind.circle.transparency = 0.8,        
                                palette.links = NULL,
                                legend.title = NULL,
                                provider = "Esri.NatGeoWorldMap",
+                               scale.bar = TRUE, 
+                               raster.image = NULL,
+                               raster.opacity = 0.5,
+                               raster.colors = scales::viridis_pal(option = "D")(255),
                                verbose = NULL) {
     
     # SET VERBOSITY
@@ -138,19 +146,21 @@ individuals nor the number of populations."
             }
         }
         
-        if (is.null(ind.circle.cols))
-            {
-            cols <- rainbow(nPop(x))
-            cols <- substr(cols, 1, 7)
-            ic <- cols[as.numeric(pop(x))]
-        } else ic <- ind.circle.cols
-        
-        
+      # if pop colors is a palette
+      if (is(ind.circle.cols, "function")) {
+        cols <- ind.circle.cols(length(levels(pop(x))))
+      }
+      # if pop colors is a vector
+      if (!is(ind.circle.cols, "function")) {
+        cols <- ind.circle.cols
+      }
+      ic <- cols[as.numeric(pop(x))]
+
         df <- x@other$latlon
         centers <-
             apply(df, 2, function(xx)
                 tapply(xx, pop(x), mean, na.rm = TRUE))
-        # when there is just one population the output of centers is a vector 
+        # when there is just one population the output of centers is a vector
         #the following lines fix this error
         if (nPop(x) == 1) {
             centers <- data.frame(lon = centers[1], lat = centers[2])
@@ -159,7 +169,7 @@ individuals nor the number of populations."
         # Add default OpenStreetMap map tiles
         m <- leaflet::leaflet() %>%
             leaflet::addTiles()
-        
+
         if (ind.circles) {
             m <- m %>%
                 leaflet::addCircles(
@@ -169,10 +179,10 @@ individuals nor the number of populations."
                     color = ic,
                     opacity = ind.circle.transparency,
                     weight = ind.circle.cex
-                    
+
                 )
         }
-        
+
         if (pop.labels) {
             m <- m %>%
                 leaflet::addLabelOnlyMarkers(
@@ -188,6 +198,19 @@ individuals nor the number of populations."
                 )
         }
         
+        if(scale.bar){
+          m <- m %>%
+            leaflet::addScaleBar(
+              position = "bottomright",
+              options = leaflet::scaleBarOptions(
+                metric        = TRUE,
+                imperial      = FALSE,
+                maxWidth      = 300,
+                updateWhenIdle = TRUE 
+              )
+            )
+        }
+
         if (!is.null(matrix)) {
           
           if (nrow(matrix) == nPop(x)) {
@@ -283,6 +306,7 @@ individuals nor the number of populations."
                 }
             }
         }
+        
         # FLAG SCRIPT END
         
         if (verbose >= 1) {
@@ -290,8 +314,18 @@ individuals nor the number of populations."
         }
         
         # RETURN
-        m %>%
-            leaflet::addProviderTiles(provider)
+        
+        plot.map <- m %>% leaflet::addProviderTiles(provider)
+        if(!is.null(raster.image)){
+          r <- terra::rast(raster.image)
+          plot.map <- plot.map  %>% 
+            leaflet::addRasterImage(r, 
+                                    opacity = raster.opacity,
+                                    colors = raster.colors)
+          
+        } 
+        
+        return(plot.map)
         
     }
 }

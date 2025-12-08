@@ -21,7 +21,7 @@ gl.report.replicates(
 \item{loc_threshold}{Minimum number of loci required to asses that two 
 individuals are replicates [default 100].}
 
-\item{perc_geno}{Mimimum percentage of genotypes in which two individuals 
+\item{perc_geno}{Minimum percentage of genotypes in which two individuals 
 should be the same [default 0.95].}
 
 \item{plot.out}{Specify if plot is to be produced [default TRUE].}
@@ -72,6 +72,7 @@ In order to ensure that replicated individuals are properly identified, it's
 }
 \examples{
 \donttest{
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
 res_rep <- gl.report.replicates(platypus.gl, loc_threshold = 500, 
 perc_geno = 0.85)
 }

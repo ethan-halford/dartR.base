@@ -27,6 +27,7 @@ This script renames a nominated population.
 The script returns a genlight object with the new population name.
 }
 \examples{
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
    gl <- gl.rename.pop(testset.gl, old='EmsubRopeMata', new='Outgroup')
    
 }

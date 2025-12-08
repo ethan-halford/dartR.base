@@ -667,12 +667,12 @@ gl.drop.sexlinked <- function(x,
                          table$gametolog  == FALSE, "index"]
     
     if (verbose>1) message("**FINISHED** \nTotal of analysed loci: ", nrow(table), ".\n",
-                           "Dropped ", length(a)+length(b)+length(c)+length(d), " sex-linked loci:\n",
-                           "   ",    length(a), " W-linked loci (yellow)\n",
-                           "   ",    length(b), " sex-biased loci (blue)\n",
-                           "   ",    length(c), " Z-linked loci (orange)\n",
-                           "   ",    length(d), " gametologs (green).\n",
-                           "And kept ",   length(autosomal), " autosomal loci (grey).")
+            "Dropped ", length(a)+length(b)+length(c)+length(d), " sex-linked loci:\n",
+            "   ",    length(a), " W-linked loci (yellow)\n",
+            "   ",    length(b), " sex-biased loci (blue)\n",
+            "   ",    length(c), " Z-linked loci (orange)\n",
+            "   ",    length(d), " gametologs (green).\n",
+            "And kept ",   length(autosomal), " autosomal loci (grey).")
   }
   
   if (system == "xy") {

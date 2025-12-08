@@ -145,23 +145,24 @@
 #'@return An object of class pcoa containing the eigenvalues and factor scores
 #'@author Author(s): Arthur Georges and Jesus Castrejon. Custodian: Arthur Georges (Post to
 #'\url{https://groups.google.com/d/forum/dartr})
-#@examples
-# # PCA (using SNP genlight object)
-# gl <- testset.gl
-# pca <- gl.pcoa(testset.gl[1:50,],verbose=2)
-# gl.pcoa.plot(pca,gl)
-# \donttest{
-# gs <- testset.gs
-# levels(pop(gs))<-c(rep('Coast',5),rep('Cooper',3),rep('Coast',5),
-# rep('MDB',8),rep('Coast',6),'Em.subglobosa','Em.victoriae')
-# # PCA (using SilicoDArT genlight object)
-# pca <- gl.pcoa(gs)
-# gl.pcoa.plot(pca,gs)
-# # Using a distance matrix
-# D <- gl.dist.ind(testset.gs, method='jaccard')
-# pcoa <- gl.pcoa(D,correction="cailliez")
-# gl.pcoa.plot(pcoa,gs)
-# }
+#'@examples
+#' # PCA (using SNP genlight object)
+#' gl <- possums.gl[1:90,]
+#' if (isTRUE(getOption("dartR_fbm"))) gl <- gl.gen2fbm(gl)
+#' pca <- gl.pcoa(gl,verbose=2)
+#' gl.pcoa.plot(pca,gl)
+#' \donttest{
+#' gs <- testset.gs
+#' levels(pop(gs))<-c(rep('Coast',5),rep('Cooper',3),rep('Coast',5),
+#' rep('MDB',8),rep('Coast',6),'Em.subglobosa','Em.victoriae')
+#' # PCA (using SilicoDArT genlight object)
+#' pca <- gl.pcoa(gs)
+#' gl.pcoa.plot(pca,gs)
+#' # Using a distance matrix
+#' D <- gl.dist.ind(testset.gs, method='jaccard')
+#' pcoa <- gl.pcoa(D,correction="cailliez")
+#' gl.pcoa.plot(pcoa,gs)
+#' }
 #'@references
 #'\itemize{
 #'\item Cailliez, F. (1983) The analytical solution of the additive constant
@@ -482,7 +483,9 @@ gl.pcoa <- function(x,
     #   return(list('struct'=struc,'noise'=noise))
     # }
     
-    bs.statistics <- function(eigenvalues, plot = FALSE, gap_threshold = 2) {
+    bs.statistics <- function(eigenvalues, 
+                              plot = FALSE,
+                              gap_threshold = 2) {
       # Function to separate eigenvalues into "structured" and "noisy" dimensions 
       # using the Broken Stick algorithm (MacArthur, 1957).
       #
@@ -527,7 +530,7 @@ gl.pcoa <- function(x,
       # Handle edge case: No eigenvalues greater than thresholds
       if (length(idx2) == 0) {
         # Return all eigenvalues as "noisy" if no structure is detected
-        return(list(struct = data.frame(), noise = df))
+        return(list(struct = data.frame(eigenvalues = 0), noise = df))
       }
       
       # Identify gaps in structured indices
@@ -540,9 +543,13 @@ gl.pcoa <- function(x,
       }
       
       # Separate structured and noisy eigenvalues based on updated idx
-      struc <- df[idx, ]
-      noise <- df[!idx, ]
-      
+      if(nrow(df[idx, ]) == 0 ){
+        return(list(struct = data.frame(eigenvalues = 0), noise = df))
+      }else{
+        struc <- df[idx, ]
+        noise <- df[!idx, ]
+      }
+
       # Add classification labels to each subset
       struc$structure <- 'structured'
       noise$structure <- 'noisy'
@@ -550,7 +557,6 @@ gl.pcoa <- function(x,
       ### Step 4: Optional Plotting ###
       if (plot) {
         # Generate a plot to visualize structured and noisy eigenvalues
-        library(ggplot2)
         p1 <- ggplot() +
           geom_point(data = struc, aes(x = index, y = eigenvalues, color = structure)) +
           geom_point(data = noise, aes(x = index, y = eigenvalues, color = structure)) +
@@ -763,7 +769,8 @@ gl.pcoa <- function(x,
                 title <-
                     paste0("PCA on Tag P/A Data\nScree Plot\n (informative axes only -- ",pc.select," criterion)")
             }
-            
+      #!# intermediate fbm fix
+      if (!is.null(.fbm_or_null(x))) x <- gl.fbm2gen(x)
         pca <-
             glPca(x,
                   nf = nfactors,
@@ -847,8 +854,8 @@ gl.pcoa <- function(x,
     # Plot Scree plot avoid no visible binding probl
     eigenvalue <- percent <- NULL
     
-    df <-
-        data.frame(eigenvalue = seq(1:length(eig.top.pc)), percent = eig.top.pc)
+    df <- data.frame(eigenvalue = seq(1:length(eig.top.pc)), 
+                     percent = eig.top.pc)
     if (datatype == "SNP") {
         xlab <- paste("PCA Axis")
     } else {
