@@ -9,7 +9,9 @@ gl.join(x1, x2, method = "join.by.loc", verbose = NULL)
 \arguments{
 \item{x1}{Name of the first genlight object [required].}
 
-\item{x2}{Name of the first genlight object [required].}
+\item{x2}{Name of the second genlight object [required].}
+
+\item{method}{Legacy parameter, issue warning [default NULL]}
 
 \item{method}{If method='join.by.ind' then combine the two by bringing the
 loci together against the same set of individuals; If method='join.by.loc' then
@@ -36,35 +38,34 @@ in from multiple csv files, then the resultant genlight objects are combined.
 This function works with both SNP and Tag P/A data.
 }
 \details{
-This script joins two genlight objects together along with the associated
-metadata. if method='join.by.ind', the individuals in the two
-genlight objects must be the same and in the same order. The loci are
-combined.
+This script joins two genlight objects together along with the associated metadata. if method='sidebyside' (the default), the individuals 
+in the two genlight objects must be the same and in the same order. The loci are combined.
 
-If method='join.by.loc' (the default), the loci in the two genlight objects 
-must be the same and in the same order. The data for the two sets of 
-individuals are combined. Note that if two individuals have the same names, 
-they will be made unique.
+If method='end2end', the loci in the two genlight objects must be the same and in the same order. The data for the two sets of individuals
+are combined. Note that if two individuals have the same names, they will be made unique.#'
 }
 \examples{
-if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
-# Joining by loci in common, both datasets have the same loci in the same order
-x1 <- testset.gl[1:10, ]
-nInd(x1)
-x2 <- testset.gl[11:20, ]
-nInd(x2)
-gl <- gl.join(x1, x2, method = "join.by.loc", verbose = 2)
-nInd(gl)
-# Joining by individuals in common, both datasets have the same individuals
-# in the same order
-if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
-x1 <- platypus.gl[, 1:100]
+# Join by adding loci to a set of common individuals
+x1 <- testset.gl[,1:100]
+x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
 nLoc(x1)
 x2 <- platypus.gl[, 101:200]
 nLoc(x2)
-gl <- gl.join(x1, x2, method = "join.by.ind", verbose = 2)
+gl <- gl.join(x1, x2, verbose=3)
 nLoc(gl)
 
+# Join by adding individuals with a set of common loci
+nInd(testset.gl)
+x1 <- gl.drop.ind(testset.gl,ind.list=c("AA010915","UC_00126","AA032760","AA013214",
+"AA011723","AA012411","AA019237","AA019238","AA019239","AA019235","AA019240",
+"AA019241","AA019242","AA019243"))
+nInd(x1)
+x2 <- gl.keep.ind(testset.gl,ind.list=c("AA010915","UC_00126","AA032760","AA013214",
+"AA011723","AA012411","AA019237","AA019238","AA019239","AA019235","AA019240",
+"AA019241","AA019242","AA019243"))
+nInd(x2)
+gl <- gl.join(x1, x2, verbose=3)
+nInd(gl)
 }
 \seealso{
 Other data manipulation: 
@@ -90,7 +91,7 @@ Other data manipulation:
 \code{\link{gl.subsample.loc}()}
 }
 \author{
-Custodian: Arthur Georges -- Post to
+Author(s): Arthur Georges. Custodian: Arthur Georges -- Post to
 \url{https://groups.google.com/d/forum/dartr}
 }
 \concept{data manipulation}
