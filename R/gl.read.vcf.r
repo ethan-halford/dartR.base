@@ -279,11 +279,13 @@ gl.read.vcf <- function(vcffile,
     )
   }
   #convert to fbm 
-  if (fbm) {}
+  if (fbm) {
   x <- gl.gen2fbm(x, verbose = verbose) 
+  }
+  # else x@fbm <- NULL
   if (verbose>2) {
     cat(report(" Created an  file-backed matrix (fbm) dartR object\n"))
-  } else x@fbm <- NULL
+  } 
   
   
   return(x)
