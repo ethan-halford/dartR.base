@@ -415,7 +415,8 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
   x3$strata <- x$strata
   x3$hierarchy <- x$hierarchy
   x3$other <- x$other
-  x3$loc.all <-  x$loc.all
+  x3$loc.all <- x$loc.all
+  pop(x3) <- pop(x)
 
   x3 <- gl.compliance.check(x3, verbose = 0)
   
