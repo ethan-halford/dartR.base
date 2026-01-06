@@ -346,6 +346,15 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
       ))
       return(-1)
     }
+    
+    # Rename scaffolds with only one SNP, which breaks beagle
+    if(length(x$chromosome)>0){
+    chr <- as.character(x@chromosome)
+    singletons <- names(which(table(chr) == 1L))
+    chr[chr %in% singletons] <- ""
+    x@chromosome <- factor(chr)
+    }
+    
     pop_list_temp <- seppop(x)
     pop_list <- list()
     
@@ -387,7 +396,8 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
                   "/imputed.vcf.gz"),
                   overwrite =T)
     x3 <- gl.read.vcf(paste0(tempdir(),
-                             "/imputed.vcf"))
+                             "/imputed.vcf"),
+                      verbose = 0)
     
     if (!is.null(fbm)) {
         x3@fbm[] <- as.matrix(x3)
