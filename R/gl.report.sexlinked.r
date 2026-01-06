@@ -135,7 +135,7 @@ gl.report.sexlinked <- function(x,
       if (verbose >= 2) {
         cat(warn(
           "  More than 2 colors specified, only the first 2 are used\n"
-          ))
+        ))
       }
       plot.colors <- plot.colors[1:2]
     }
@@ -170,7 +170,7 @@ gl.report.sexlinked <- function(x,
     if (!(system == 'zw' | system == 'xy')) {
       stop(error(
         "Parameter 'system' must be 'zw' or 'xy'."
-        ))
+      ))
     }
   }
   
@@ -237,7 +237,7 @@ gl.report.sexlinked <- function(x,
     if (verbose > 1){
       message(report(
         "  Starting phase 1. Working in parallel..."
-        ))
+      ))
     }
   } else {
     if (verbose > 1){
@@ -389,7 +389,7 @@ gl.report.sexlinked <- function(x,
     message(report(
       "  Building call rate plot."
     ))
-}
+  }
   
   # For zw sex-determination system
   if (system == "zw") {
@@ -424,7 +424,7 @@ gl.report.sexlinked <- function(x,
   if (verbose > 1){
     message(report("  Done building call rate plot."
     ))
-    }
+  }
   
   #################### 2. Sex-linked loci by heterozygosity
   # Count heterozygotes ("1") and add as column to results table
@@ -446,8 +446,8 @@ gl.report.sexlinked <- function(x,
   if (verbose > 1){
     message(report(
       "  Starting phase 2. May take a while..."
-      ))
-}
+    ))
+  }
   
   if (ncores > 1) {
     xstat <- foreach::foreach(i = 1:nrow(table), .combine = rbind) %dopar% {
@@ -663,12 +663,12 @@ gl.report.sexlinked <- function(x,
                          table$gametolog  == FALSE, "index"]
     
     if (verbose>1) message("**FINISHED** \nTotal of analyzed loci: ", nrow(table), ".\n",
-            "Found ", length(a)+length(b)+length(c)+length(d), " sex-linked loci:\n",
-            "   ",    length(a), " W-linked loci (yellow)\n",
-            "   ",    length(b), " sex-biased loci (blue)\n",
-            "   ",    length(c), " Z-linked loci (orange)\n",
-            "   ",    length(d), " gametologs (green).\n",
-            "And ",   length(autosomal), " autosomal loci (grey).")
+                           "Found ", length(a)+length(b)+length(c)+length(d), " sex-linked loci:\n",
+                           "   ",    length(a), " W-linked loci (yellow)\n",
+                           "   ",    length(b), " sex-biased loci (blue)\n",
+                           "   ",    length(c), " Z-linked loci (orange)\n",
+                           "   ",    length(d), " gametologs (green).\n",
+                           "And ",   length(autosomal), " autosomal loci (grey).")
   }
   
   if (system == "xy") {
@@ -683,19 +683,19 @@ gl.report.sexlinked <- function(x,
                          table$gametolog  == FALSE, "index"]
     
     if (verbose>1) message("**FINISHED** \nTotal of analyzed loci: ", nrow(table), ".\n",
-            "Found ", length(a)+length(b)+length(c)+length(d), " sex-linked loci:\n",
-            "   ",    length(a), " Y-linked loci (yellow)\n",
-            "   ",    length(b), " sex-biased loci (blue)\n",
-            "   ",    length(c), " X-linked loci (orange)\n",
-            "   ",    length(d), " gametologs (green).\n",
-            "And ",   length(autosomal), " autosomal loci (grey).")
+                           "Found ", length(a)+length(b)+length(c)+length(d), " sex-linked loci:\n",
+                           "   ",    length(a), " Y-linked loci (yellow)\n",
+                           "   ",    length(b), " sex-biased loci (blue)\n",
+                           "   ",    length(c), " X-linked loci (orange)\n",
+                           "   ",    length(d), " gametologs (green).\n",
+                           "And ",   length(autosomal), " autosomal loci (grey).")
   }
   
   #################### 4. Output
   if (ncores > 1) {
     parallel::stopCluster(cl)
   }
-
+  
   p2 <- BEF.mis+BEF.het
   if(plot.display){
     
@@ -716,7 +716,7 @@ gl.report.sexlinked <- function(x,
   if (verbose >= 1) {
     cat(report(
       "Completed:", funname, "\n"
-      ))
+    ))
   }
   # ----------------------
   
