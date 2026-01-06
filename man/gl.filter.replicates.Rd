@@ -57,7 +57,6 @@ t2 <- gl.filter.replicates(t1, replicates.report = res_rep)
 \seealso{
 Other matched filter: 
 \code{\link{gl.filter.callrate}()},
-\code{\link{gl.filter.hamming}()},
 \code{\link{gl.filter.ld}()},
 \code{\link{gl.filter.locmetric}()},
 \code{\link{gl.filter.maf}()},
