@@ -249,6 +249,8 @@ List filter_hamming_blocks_cpp(List raws_trimmed,
     x2 <- gl.drop.loc(x,
                 loc.list = locNames(x)[pairs_idx$loc_to_drop],
                 verbose = 0)
+    # x2 <- x[,-pairs_idx$loc_to_drop]
+    # x2@other$loc.metrics <- x@other$loc.metrics[-pairs_idx$loc_to_drop, ]
 
     # REPORT A SUMMARY
     if (verbose >= 3) {
