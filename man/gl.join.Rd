@@ -4,7 +4,7 @@
 \alias{gl.join}
 \title{Combines two dartR genlight objects}
 \usage{
-gl.join(x1, x2, method = "join.by.loc", verbose = NULL)
+gl.join(x1, x2, method = NULL, verbose = NULL)
 }
 \arguments{
 \item{x1}{Name of the first genlight object [required].}
@@ -12,11 +12,6 @@ gl.join(x1, x2, method = "join.by.loc", verbose = NULL)
 \item{x2}{Name of the second genlight object [required].}
 
 \item{method}{Legacy parameter, issue warning [default NULL]}
-
-\item{method}{If method='join.by.ind' then combine the two by bringing the
-loci together against the same set of individuals; If method='join.by.loc' then
-combine the two by bringing two sets of individuals together against the
-same set of loci [default 'join.by.loc']}
 
 \item{verbose}{Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 progress log; 3, progress and results summary; 5, full report
@@ -28,9 +23,10 @@ A new genlight object
 \description{
 This function combines two genlight objects and their associated metadata.
 The history associated with the two genlight objects is cleared from the new
-genlight object. The individuals/samples must be the same in each genlight
-object.
-
+genlight object. Either the individuals/samples must be the same in each genlight
+object, in which case the new genlight object has the same individuals but combined loci,
+or the number of loci must be the same in each genlight object in which case the new
+genlight object has the same loci but combined individuals/samples.
 The function is typically used to combine datasets from the same service
 where the files have been split because of size limitations. The data is read
 in from multiple csv files, then the resultant genlight objects are combined.
@@ -45,9 +41,18 @@ If method='end2end', the loci in the two genlight objects must be the same and i
 are combined. Note that if two individuals have the same names, they will be made unique.#'
 }
 \examples{
-# Join by adding loci to a set of common individuals
-x1 <- testset.gl[,1:100]
-x1@other$loc.metrics <-  testset.gl@other$loc.metrics[1:100,]
+if (isTRUE(getOption("dartR_fbm"))) testset.gl <- gl.gen2fbm(testset.gl)
+# Joining by loci in common, both datasets have the same loci in the same order
+x1 <- testset.gl[1:10, ]
+nInd(x1)
+x2 <- testset.gl[11:20, ]
+nInd(x2)
+gl <- gl.join(x1, x2, method = "join.by.loc", verbose = 2)
+nInd(gl)
+# Joining by individuals in common, both datasets have the same individuals
+# in the same order
+if (isTRUE(getOption("dartR_fbm"))) platypus.gl <- gl.gen2fbm(platypus.gl)
+x1 <- platypus.gl[, 1:100]
 nLoc(x1)
 x2 <- platypus.gl[, 101:200]
 nLoc(x2)
@@ -80,6 +85,7 @@ Other data manipulation:
 \code{\link{gl.keep.pop}()},
 \code{\link{gl.make.recode.ind}()},
 \code{\link{gl.merge.pop}()},
+\code{\link{gl.reassign.ind}()},
 \code{\link{gl.reassign.pop}()},
 \code{\link{gl.recode.ind}()},
 \code{\link{gl.recode.pop}()},
