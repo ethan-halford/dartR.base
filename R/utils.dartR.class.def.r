@@ -55,11 +55,6 @@ fbm_or_gen <- function(x) {
   stop("Neither @fbm nor @gen slot found or populated in object.")
 }
 
-
-
-
-
-
 ## (Re)define your subclass; it CONTAINS genlight and ADDS a slot
 setClass("dartR",
          contains = "genlight",
@@ -89,7 +84,6 @@ setClass("dartR",
              if (length(object@loc.names) > 0 && length(object@loc.names) != dm[2])
                return("length(@loc.names) must match ncol(@fbm).")
            } 
-           
            TRUE
          }
 )
