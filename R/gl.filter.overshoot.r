@@ -111,7 +111,7 @@ gl.filter.overshoot <- function(x,
         cat(report("Completed:", funname, "\n"))
       }
       
-      return(x2)
+      return(x)
     }
 
 }
