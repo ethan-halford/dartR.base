@@ -84,7 +84,7 @@ utils.dist.ind.snp <- function(x,
   nL <- nLoc(x)
   dd <- array(NA_real_, c(nI, nI))
   
-  if (verbose >= 2) {
+  # if (verbose >= 2) {
     if (method == "euclidean") {
       if (scale) {
         cat(report("  Calculating the scaled distance matrix --", method, "\n"))
@@ -273,9 +273,10 @@ utils.dist.ind.snp <- function(x,
     if (verbose > 0) {
         cat(report("Completed:", funname, "\n"))
     }
-  }
+  # }
   
   # Fill diagonal and mirror upper triangle
+  dd <- as.matrix(dd)
   diag(dd) <- 0
   dd[upper.tri(dd)] <- t(dd)[upper.tri(dd)]
   
