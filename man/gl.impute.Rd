@@ -9,6 +9,8 @@ gl.impute(
   method = "neighbour",
   fill.residual = TRUE,
   parallel = FALSE,
+  beagle.bin.path = getwd(),
+  plink.bin.path = getwd(),
   verbose = NULL
 )
 }
@@ -26,6 +28,10 @@ frequencies at the particular locus [default TRUE].}
 \item{parallel}{A logical indicating whether multiple cores -if available-
 should be used for the computations (TRUE), or not (FALSE); requires the
 package parallel to be installed [default FALSE].}
+
+\item{beagle.bin.path}{Path of beagle.27Feb25.75f.jar file [default getwd())].}
+
+\item{plink.bin.path}{Path of PLINK binary file [default getwd())].}
 
 \item{verbose}{Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 progress log ; 3, progress and results summary; 5, full report

@@ -17,6 +17,8 @@
 #' @param parallel A logical indicating whether multiple cores -if available-
 #' should be used for the computations (TRUE), or not (FALSE); requires the
 #' package parallel to be installed [default FALSE].
+#' @param beagle.bin.path Path of beagle.27Feb25.75f.jar file [default getwd())].
+#' @param plink.bin.path Path of PLINK binary file [default getwd())].
 #' @param verbose Verbosity: 0, silent or fatal errors; 1, begin and end; 2,
 #' progress log ; 3, progress and results summary; 5, full report
 #' [default 2 or as specified using gl.set.verbosity].
@@ -95,6 +97,8 @@ gl.impute <-  function(x,
                        method = "neighbour",
                        fill.residual = TRUE,
                        parallel = FALSE,
+                       beagle.bin.path = getwd(),
+                       plink.bin.path = getwd(),
                        verbose = NULL) {
   
   x_hold <- x
@@ -221,80 +225,101 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
   }
   
   if (method == "neighbour") {
-    if (verbose >= 2){
+    
+    if (verbose >= 2) {
       cat(report("  Imputation based on drawing from the nearest neighbour\n"))
     }
-    pop_list_temp <- seppop(x)
-    pop_list <- list()
     
-    for (y in pop_list_temp) {
-      loci_all_nas <- sum(glNA(y) >= nInd(y))
-      nas_number <- sum(glNA(y)) / 2
-      number_imputations <- nas_number - (loci_all_nas * nInd(y))
+    ## ---- Optional: per-population diagnostics (does not affect imputation) ----
+    if (verbose >= 2) {
+      pop_list_temp <- seppop(x)
+      
+      for (k in seq_along(pop_list_temp)) {
+        yy <- pop_list_temp[[k]]
+        
+        loci_all_nas <- sum(glNA(yy) >= nInd(yy))
+        nas_number <- sum(glNA(yy)) / 2
+        number_imputations <- nas_number - (loci_all_nas * nInd(yy))
+        
+        if (loci_all_nas >= 1) {
+          pop_name <- names(pop_list_temp)[k]
+          if (is.null(pop_name) || pop_name == "") {
+            # fallback if list not named
+            pop_name <- tryCatch(as.character(unique(pop(yy))[1]), error = function(e) "UNKNOWN")
+          }
+          
+          cat(warn(
+            "  Warning: Population ", pop_name,
+            " has ", loci_all_nas, " loci with all missing values.\n",
+            sep = ""
+          ))
+          
+          if (verbose >= 3) {
+            cat(report(
+              "  Method = 'neighbour': ", number_imputations,
+              " values to be imputed (excluding all-NA loci).\n",
+              sep = ""
+            ))
+          }
+        }
+      }
     }
     
-    if (verbose >= 2 & loci_all_nas >= 1) {
-      cat(
-        warn(
-          "  Warning: Population ",
-          popNames(y),
-          " has ",
-          loci_all_nas,
-          " loci with all missing values.\n"
-        )
-      )
-      if (verbose >= 3) {
-        cat(report(
-          "  Method= 'neighbour':",
-          number_imputations,
-          "values to be imputed.\n"
+    ## ---- Main imputation ----
+    x3 <- x
+    x_matrix <- as.matrix(x)  # numeric matrix, nInd x nLoc, with NA
+    
+    D <- gl.dist.ind(
+      x,
+      method = "Euclidean",
+      verbose = 0,
+      plot.display = FALSE,
+      type = "matrix"
+    )
+    
+    # Robust distance handling:
+    D <- as.matrix(D)
+    D[is.na(D)] <- Inf     # if any undefined distances, make them last
+    diag(D) <- Inf         # never pick self as neighbour
+    
+    n <- nInd(x)
+    
+    for (i in seq_len(n)) {
+      
+      miss <- is.na(x_matrix[i, ])
+      if (!any(miss)) next
+      
+      ord <- order(D[i, ], decreasing = FALSE)  # neighbour indices by increasing distance
+      
+      # Walk neighbours until all missing loci filled (or we run out of neighbours)
+      for (j in ord) {
+        if (!any(miss)) break
+        
+        cand <- x_matrix[j, miss]       # values at missing loci from neighbour j
+        ok <- !is.na(cand)              # loci neighbour can actually impute
+        
+        if (any(ok)) {
+          miss_pos <- which(miss)
+          fill_pos <- miss_pos[ok]
+          x_matrix[i, fill_pos] <- cand[ok]
+          miss[fill_pos] <- FALSE
+        }
+      }
+      
+      if (any(miss) && verbose >= 1) {
+        cat(important(
+          "  Unable to fully impute individual ", indNames(x)[i],
+          " (", sum(miss), " loci remain NA)\n",
+          sep = ""
         ))
       }
     }
     
-    x3 <- x
-    
-    eucl_dis <-
-      gl.dist.ind(x,
-                  method = "Euclidean",
-                  verbose = 0,
-                  plot.display = FALSE,
-                  type = "matrix")
-    
-    pw_dis <- as.data.frame(as.table(as.matrix(eucl_dis)))
-    
-    x_matrix <- as.matrix(x)
-    
-    for (ind in 1:nInd(x)) {
-      ind_imp <- x_matrix[ind, ]
-      pw_dis_2 <- pw_dis[which(indNames(x)[ind] == pw_dis$Var1), ]
-      pw_dis_3 <- pw_dis_2[order(pw_dis_2$Freq), ]
-      pw_dis_4 <- pw_dis_3[-(pw_dis_3 == 0), ]
-      
-      while (sum(is.na(ind_imp)) > 0) {
-        if (nrow(pw_dis_4) == 0) {
-          cat(important(
-            "  No more individuals left to impute individual",
-            ind,
-            "\n"
-          ))
-          break()
-        }
-        
-        neig <- as.numeric(pw_dis_4[1, "Var2"])
-        neig_matrix <- as.matrix(x[neig])
-        
-        loc_na <- unname(which(is.na(ind_imp)))
-        
-        ind_imp[loc_na] <- neig_matrix[loc_na]
-        
-        x_matrix[ind, ] <- ind_imp
-        pw_dis_4 <- pw_dis_4[-1, ]
-      }
-      
+    if (is.null(fbm)) {
+      x3@gen <- matrix2gen(x_matrix, parallel = parallel)
+    } else {
+      x3@fbm[] <- x_matrix
     }
-    if (is.null(fbm)) x3@gen <- matrix2gen(x_matrix, parallel = parallel) else x3@fbm[] <-x_matrix
-    
   }
   
   if (method == "random") {
@@ -386,9 +411,11 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
     
     x_tmp <- x
     x_tmp@position <- 1:nLoc(x_tmp)
-    gl2vcf(x_tmp,outpath = tempdir())
+    gl2vcf(x_tmp,
+           plink.bin.path = plink.bin.path,
+           outpath = tempdir())
     system(paste0(
-      "java -Xmx20g -jar ./beagle.27Feb25.75f.jar gt=",
+      "java -Xmx20g -jar ",beagle.bin.path,"/beagle.27Feb25.75f.jar gt=",
       tempdir(),
       "/gl_vcf.vcf out=",
       tempdir(),
@@ -396,13 +423,20 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
     R.utils::gunzip(paste0(tempdir(),
                   "/imputed.vcf.gz"),
                   overwrite =T)
-    x3 <- gl.read.vcf(paste0(tempdir(),
-                             "/imputed.vcf"),
-                      verbose = 0)
+
     
     if (!is.null(fbm)) {
-        x3@fbm[] <- as.matrix(x3)
+      x3 <- gl.read.vcf(paste0(tempdir(),
+                               "/imputed.vcf"),
+                        fbm = TRUE,
+                        verbose = 0)
+    }else{
+      x3 <- gl.read.vcf(paste0(tempdir(),
+                               "/imputed.vcf"),
+                        verbose = 0)
+      
     }
+    
   }
   
   if(fill.residual==TRUE){
