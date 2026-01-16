@@ -258,7 +258,8 @@ pop_matrix[loc_na] <- unname(unlist(lapply(q_allele[loc_na[, 2]], function(x) {
       gl.dist.ind(x,
                   method = "Euclidean",
                   verbose = 0,
-                  plot.display = FALSE)
+                  plot.display = FALSE,
+                  type = "matrix")
     
     pw_dis <- as.data.frame(as.table(as.matrix(eucl_dis)))
     
