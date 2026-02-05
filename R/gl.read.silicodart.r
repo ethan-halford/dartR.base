@@ -226,6 +226,31 @@ gl.read.silicodart <- function(filename,
     
     glout@other$loc.metrics <- covmetrics
     
+    # Checking that TrimmedSequence exists
+    if (!"TrimmedSequence" %in% names(gout@other$loc.metrics)) {
+      if ("TrimmedSequenceSnp" %in% names(gout@other$loc.metrics)) {
+        gout@other$loc.metrics$TrimmedSequence <- gout@other$loc.metrics$TrimmedSequenceSnp
+        cat(
+          warn(
+            "TrimmedSequence field in loc.metrics was created from field TrimmedSequenceSnp"
+          )
+        )
+      } else if ("AlleleSequenceSnp" %in% names(gout@other$loc.metrics)) {
+        gout@other$loc.metrics$TrimmedSequence <- gout@other$loc.metrics$AlleleSequenceSnp
+        cat(
+          warn(
+            "TrimmedSequence field in loc.metrics was created from field AlleleSequenceSnp"
+          )
+        )
+      } else{
+        cat(
+          warn(
+            "TrimmedSequence field was not found in your DArT report, so some functions may not work"
+          )
+        )
+      }
+    } 
+    
     if (!is.null(ind.metafile)) {
         cat(report(
             paste("  Adding individual metadata:", ind.metafile, ".\n")
