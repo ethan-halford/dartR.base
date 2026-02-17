@@ -147,8 +147,9 @@
 #'\url{https://groups.google.com/d/forum/dartr})
 #'@examples
 #' # PCA (using SNP genlight object)
-#' gl <- possums.gl
-#' pca <- gl.pcoa(possums.gl[1:50,],verbose=2)
+#' gl <- possums.gl[1:90,]
+#' if (isTRUE(getOption("dartR_fbm"))) gl <- gl.gen2fbm(gl)
+#' pca <- gl.pcoa(gl,verbose=2)
 #' gl.pcoa.plot(pca,gl)
 #' \donttest{
 #' gs <- testset.gs
@@ -482,7 +483,9 @@ gl.pcoa <- function(x,
     #   return(list('struct'=struc,'noise'=noise))
     # }
     
-    bs.statistics <- function(eigenvalues, plot = FALSE, gap_threshold = 2) {
+    bs.statistics <- function(eigenvalues, 
+                              plot = FALSE,
+                              gap_threshold = 2) {
       # Function to separate eigenvalues into "structured" and "noisy" dimensions 
       # using the Broken Stick algorithm (MacArthur, 1957).
       #
@@ -527,7 +530,7 @@ gl.pcoa <- function(x,
       # Handle edge case: No eigenvalues greater than thresholds
       if (length(idx2) == 0) {
         # Return all eigenvalues as "noisy" if no structure is detected
-        return(list(struct = data.frame(), noise = df))
+        return(list(struct = data.frame(eigenvalues = 0), noise = df))
       }
       
       # Identify gaps in structured indices
@@ -540,9 +543,13 @@ gl.pcoa <- function(x,
       }
       
       # Separate structured and noisy eigenvalues based on updated idx
-      struc <- df[idx, ]
-      noise <- df[!idx, ]
-      
+      if(nrow(df[idx, ]) == 0 ){
+        return(list(struct = data.frame(eigenvalues = 0), noise = df))
+      }else{
+        struc <- df[idx, ]
+        noise <- df[!idx, ]
+      }
+
       # Add classification labels to each subset
       struc$structure <- 'structured'
       noise$structure <- 'noisy'
@@ -762,7 +769,8 @@ gl.pcoa <- function(x,
                 title <-
                     paste0("PCA on Tag P/A Data\nScree Plot\n (informative axes only -- ",pc.select," criterion)")
             }
-            
+      #!# intermediate fbm fix
+      if (!is.null(.fbm_or_null(x))) x <- gl.fbm2gen(x)
         pca <-
             glPca(x,
                   nf = nfactors,
@@ -846,8 +854,8 @@ gl.pcoa <- function(x,
     # Plot Scree plot avoid no visible binding probl
     eigenvalue <- percent <- NULL
     
-    df <-
-        data.frame(eigenvalue = seq(1:length(eig.top.pc)), percent = eig.top.pc)
+    df <- data.frame(eigenvalue = seq(1:length(eig.top.pc)), 
+                     percent = eig.top.pc)
     if (datatype == "SNP") {
         xlab <- paste("PCA Axis")
     } else {

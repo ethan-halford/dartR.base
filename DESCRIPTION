@@ -1,8 +1,9 @@
 Package: dartR.base
 Type: Package
 Title: Analysing 'SNP' and 'Silicodart' Data - Basic Functions
-Version: 1.0.6
-Date: 2025-10-01
+Version: 1.2.2
+Date: 2026-02-17
+Revision: Elastic Elapid
 Authors@R: c(
             person("Bernd", "Gruber", email="bernd.gruber@canberra.edu.au", role=c("aut","cre")), 
             person("Arthur", "Georges", email="georges@aerg.edu.au", role="aut"),
@@ -32,11 +33,11 @@ Description: Facilitates the import and analysis of 'SNP' (single nucleotide 'po
     If you want to cite 'dartR', you find the information by typing citation('dartR.base')
     in the console.
 Encoding: UTF-8
-Depends: R (>= 3.5), adegenet (>= 2.0.0), ggplot2, dplyr, dartR.data
+Depends: R (>= 3.5), ggplot2, dplyr, dartR.data
 biocViews:
 Imports: ape,crayon,data.table,foreach,gridExtra,methods,patchwork,plyr,
          reshape2,SNPRelate,StAMPP,stats,stringr,tidyr,utils,MASS,SNPassoc,
-         snpStats, raster
+         bigstatsr, bigsnpr, snpStats,gtools, adegenet
 Suggests: 
     boot,
     devtools,
@@ -85,16 +86,19 @@ Suggests:
     shinyWidgets,
     SIBER,
     stringi,
-    terra,
     tibble,
     vcfR,
     zoo,
     viridis,
     fields,
     testthat (>= 3.0.0), 
-    ggtern
+    ggtern, 
+    dendextend,
+    ggdendro,
+    terra,
+    R.utils
 License: GPL (>= 3)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 NeedsCompilation: no
 Packaged: 2021-04-28 23:28:46 UTC; s425824
 Author: Bernd Gruber [aut, cre],
@@ -108,6 +112,5 @@ Author: Bernd Gruber [aut, cre],
   Floriaan Devloo-Delva [ctb],
   Eric Archer [ctb],
   Ching Ching Lau [ctb]
-Config/testthat/edition: 3
 URL: https://green-striped-gecko.github.io/dartR/
 BugReports: https://groups.google.com/g/dartr?pli=1
