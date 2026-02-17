@@ -1,8 +1,9 @@
 Package: dartR.base
 Type: Package
 Title: Analysing 'SNP' and 'Silicodart' Data - Basic Functions
-Version: 1.1.1
-Date: 2025-11-04
+Version: 1.2.2
+Date: 2026-02-17
+Revision: Elastic Elapid
 Authors@R: c(
             person("Bernd", "Gruber", email="bernd.gruber@canberra.edu.au", role=c("aut","cre")), 
             person("Arthur", "Georges", email="georges@aerg.edu.au", role="aut"),
@@ -94,7 +95,8 @@ Suggests:
     ggtern, 
     dendextend,
     ggdendro,
-    terra
+    terra,
+    R.utils
 License: GPL (>= 3)
 RoxygenNote: 7.3.3
 NeedsCompilation: no

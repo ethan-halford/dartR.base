@@ -86,10 +86,14 @@ gl.filter.hamming <- function(x,
   }
 
   # DO THE JOB
-  
+
   n0 <- nLoc(x)
   
-    Rcpp::cppFunction(code = '
+  #setup empty function and objects for CRAN checks
+  filter_hamming_blocks_cpp <- function() {  }
+  loc_to_drop <- i_cr <- j_cr <- j <- i <- sq <- NULL
+  
+  Rcpp::cppFunction(code = '
 #include <Rcpp.h>
 #include <unordered_map>
 #include <vector>
@@ -118,6 +122,8 @@ static inline bool within_k_mism(const uint8_t* a, const uint8_t* b, int L, int 
   }
   return true;
 }
+
+
 
 // [[Rcpp::export]]
 List filter_hamming_blocks_cpp(List raws_trimmed,
@@ -225,6 +231,7 @@ List filter_hamming_blocks_cpp(List raws_trimmed,
 }
 ', depends = "Rcpp")
     
+
     seqs <- as.character(x@other$loc.metrics$TrimmedSequence)
     trimmed <- substr(seqs, rs + 1 , min.length + rs)
     raws <- lapply(trimmed, charToRaw)

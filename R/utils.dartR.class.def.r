@@ -482,9 +482,9 @@ setMethod("[", signature(x = "dartR", i = "ANY", j = "ANY", drop = "ANY"),
           })
 
 ###############################################################
-#' adjust cbind for dartR
-#'
-#' cbind is a bit lazy and does not take care for the metadata (so data in the
+#' @name cbind.dartR
+#' @title cbind for dartR objects
+#' @description cbind is a bit lazy and does not take care for the metadata (so data in the
 #' other slot is lost). You can get most of the loci metadata back using
 #' gl.compliance.check.
 #' @param ... list of dartR objects
@@ -499,7 +499,6 @@ setMethod("[", signature(x = "dartR", i = "ANY", j = "ANY", drop = "ANY"),
 #' @return A genlight object
 #' @export
 
-## --- FBM-aware cbind for dartR/genlight ---
 cbind.dartR <- function(...,
                         backingfile = tempfile("geno_"),
                         code = NULL,          # if NULL: inherit from first FBM or use CODE_DOSAGE
@@ -697,11 +696,11 @@ cbind.dartR <- function(...,
 } # end cbind.dartR
 ###############################################################
 ##################################################################
-#' adjust rbind for dartR
-#'
-#' rbind is a bit lazy and does not take care for the metadata (so data in the
+#' @name rbind.dartR
+#' @title rbind for dartR objects
+#' @description rbind is a bit lazy and does not take care for the metadata (so data in the
 #' other slot is lost). You can get most of the loci metadata back using
-#'  gl.compliance.check.
+#' gl.compliance.check.
 #' @param ... list of dartR objects
 #' @param backingfile prefix for the backing file of the resulting FBM
 #' @param code code mapping to use for the resulting FBM=CODE_012; if NULL, inherits from the first FBM input
@@ -713,8 +712,6 @@ cbind.dartR <- function(...,
 #' t2 <- rbind(t1[1:5,],t1[6:10,])
 #' @return A genlight object 
 #' @export
-
-## FBM-aware rbind for dartR / genlight using big_apply in the copy loop
 rbind.dartR <- function(...,
                         backingfile   = tempfile("geno_rbind_"),
                         code          = NULL,        # if NULL: inherit from first FBM
