@@ -1,6 +1,7 @@
 #' @import bigstatsr
 #' @import bigsnpr
 #' @importFrom methods callNextMethod slotNames
+#' @import adegenet
 
 #seppop needs to be imported to work for dartR
 #also internal functions for "[" methods
@@ -945,15 +946,33 @@ methods::setAs("dartR", "matrix", function(from) {
 ############glSum############################################################################
 
 ## Ensure the generic exists (adegenet defines it; this is safe if already present)
-if (!methods::isGeneric("glSum")) {
-  methods::setGeneric("glSum", function(x, alleleAsUnit = TRUE, useC=FALSE) standardGeneric("glSum"))
-}
+#if (!methods::isGeneric("glSum")) {
+#  methods::setGeneric("glSum", function(x, alleleAsUnit = TRUE, useC=FALSE) standardGeneric("glSum"))
+#}
+
+
+
+#' @name glSum
+#' @title glSum for dartR objects
+#' @description glSum is necessary as adegenet is using it internally and we need one for fbm projects
+#' @param x a dartR object 
+#' @param alleleAsUnit logical; if TRUE, the mean is calculated per allele,
+#' if FALSE, per individual
+#' @param useC FALSE, default if set to true not sure what happens ;-)
+#' @return A numeric vector of sum of second allele per locus
+#' @export
+glSum <- function(x, alleleAsUnit = TRUE, useC=FALSE) {
+  fbm <- .has_fbm(x)
+
+  ## If no FBM (old object or genlight mode), delegate to next method (genlight)
+  if (!fbm){
+    class(x)<- "genlight"
+    res <- adegenet::glSum(x, alleleAsUnit = alleleAsUnit, useC=useC); return(res)
+  }
+
 
 ## ---- FBM-aware glSum for dartR ----
-setMethod("glSum", signature(x = "dartR"), function(x, alleleAsUnit = TRUE, useC=FALSE)  {
-  fbm <- .fbm_or_null(x)
-  ## If no FBM (old object or genlight mode), delegate to next method (genlight)
-  if (is.null(fbm)) return(callNextMethod())
+
   
   if (alleleAsUnit) {
     res <- integer(nLoc(x))
@@ -962,8 +981,7 @@ setMethod("glSum", signature(x = "dartR"), function(x, alleleAsUnit = TRUE, useC
       temp[is.na(temp)] <- 0L
       res <- res + temp
     }
-  }
-  else {
+  }  else {
     res <- numeric(nLoc(x))
     myPloidy <- ploidy(x)
     for (i in 1:nInd(x)) {
@@ -975,7 +993,7 @@ setMethod("glSum", signature(x = "dartR"), function(x, alleleAsUnit = TRUE, useC
 
   names(res) <- locNames(x)
   return(res)
-})
+}
 
 setMethod("glNA", signature(x = "dartR"), function(x, alleleAsUnit = TRUE)  {
   fbm <- .fbm_or_null(x)
@@ -1001,14 +1019,29 @@ setMethod("glNA", signature(x = "dartR"), function(x, alleleAsUnit = TRUE)  {
   return(res)
 })
 
-#' glMean function for dartR object
+#if (!methods::isGeneric("glMean")) {
+#  methods::setGeneric("glMean", function(x, ...) standardGeneric("glMean"))
+#}
+#setMethod("glMean", signature(x = "dartR"),  function(x, alleleAsUnit = TRUE) {
+#' @name glMean
+#' @title glMean for dartR objects
+#' @description glMean is necessary as adegenet is using it internally and we need one for fbm projects
 #' @param x a dartR object 
 #' @param alleleAsUnit logical; if TRUE, the mean is calculated per allele,
 #' if FALSE, per individual
 #' @return A numeric vector of means per locus
 #' @export
 glMean <- function(x, alleleAsUnit = TRUE) {
+  fbm <- .has_fbm(x)
+  ## If no FBM (old object or genlight mode), delegate to next method (genlight)
+  if (!fbm){
+    class(x)<- "genlight"
+    res <- adegenet::glMean(x, alleleAsUnit = alleleAsUnit); return(res)
+    }
+    
+  
   if (alleleAsUnit) {
+    
     N <- sum(ploidy(x)) - glNA(x, alleleAsUnit = TRUE)
     res <- glSum(x, alleleAsUnit = TRUE)/N
   } else {
@@ -1018,6 +1051,8 @@ glMean <- function(x, alleleAsUnit = TRUE) {
   names(res) <- locNames(x)
   return(res)
 }
+
+
 
 #############NA.posi##########################################################
 ## Ensure the generic exists (adegenet defines it; safe if already present)
